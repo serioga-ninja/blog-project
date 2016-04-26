@@ -63,6 +63,13 @@ export class UserController {
         });
     });
 
+    static destroy = APIMethod((req:express.Request) => {
+        var username:string = req.params.username;
+        return UserModel.model.remove({username: username}).exec().onResolve((err) => {
+            return 'OK'
+        });
+    });
+
     get fields():Object {
         return this._document;
     }

@@ -8,6 +8,7 @@ export function index() {
     app.get('/:username', UserController.findByUsername);
     app.post('/new', UserController.findOrCreate);
     app.put('/:username', UserController.update);
+    app.delete('/:username', UserController.destroy);
 
     return app;
 }
