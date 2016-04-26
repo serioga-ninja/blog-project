@@ -1,13 +1,18 @@
 import bodyParser = require("body-parser");
 import morgan = require('morgan');
 import express = require('express');
+
 // Mongo
-import mongodb = require('mongodb');
+import mongoose = require('mongoose');
 
 export function express(app) {
     app.use(bodyParser.urlencoded({extended: true}));
     app.use(bodyParser.json());
     app.use(morgan('combined')); // logging
+    app.use(require('serve-static')(__dirname + '/../../public'));
+    app.use(require('cookie-parser')());
+    app.use(require('body-parser').urlencoded({extended: true}));
+    app.use(require('express-session')({secret: 'keyboard cat', resave: true, saveUninitialized: true}));       
 
     app.use('/api/v1', require('./api').index());
 
@@ -17,8 +22,5 @@ export function express(app) {
 }
 
 export function database() {
-    var server = new mongodb.Server('localhost', 27017, {auto_reconnect: true});
-    var db = new mongodb.Db('mydb', server, {w: 1});
-    db.open(function () {
-    });
+    mongoose.connect('mongodb://localhost/blog_project');
 }
