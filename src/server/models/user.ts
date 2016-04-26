@@ -2,7 +2,8 @@ import mongoose = require('mongoose');
 import {PostModel, CommentModel} from "./index";
 
 var Schema = mongoose.Schema,
-    ObjectId = Schema.Types.ObjectId;
+    ObjectId = Schema.Types.ObjectId,
+    validators = require('mongoose-validators');
 
 export module UserModel {
     export interface _interface extends mongoose.Document {
@@ -13,50 +14,41 @@ export module UserModel {
         lastName:string;
         email:string;
         password:string;
-        created:Date;
-        updated:Date;
     }
 
     export var _schema:mongoose.Schema = new mongoose.Schema({
-        provider: {
-            type: String,
-            require: true
-        },
         id: {
             type: String,
             require: true
         },
         username: {
             type: String,
-            require: true
+            require: true,
+            unique: true,
+            validate: validators.isAlpha()
         },
         firstName: {
             type: String,
-            require: true
+            require: true,
+            validate: validators.isAlpha()
         },
         lastName: {
             type: String,
-            require: true
+            require: true,
+            validate: validators.isAlpha()
         },
         email: {
             type: String,
-            require: true
+            require: true,
+            validate: validators.isEmail()
         },
         password: {
             type: String,
             require: true
         },
         comments: [CommentModel._schema],
-        posts: [PostModel._schema],
-        created: {
-            type: Date,
-            default: Date.now
-        },
-        updated: {
-            type: Date,
-            default: Date.now
-        }
-    }).pre('save', function (next) {
+        posts: [PostModel._schema]
+    }, {timestamps: {createdAt: 'created_at'}}).pre('save', function (next) {
         this.updated = new Date();
         next();
     });

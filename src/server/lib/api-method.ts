@@ -1,6 +1,8 @@
 import * as express from "express";
 import {APIError} from "./api-error";
+import * as _ from "lodash";
 import Promise = require('bluebird');
+var mongoose = require("mongoose");
 
 
 export function APIMethod(fn:Function) {
@@ -11,8 +13,13 @@ export function APIMethod(fn:Function) {
             response.status(200).json(res);
         }).catch(APIError, (err) => {
             response.status(err.code).json(err.message);
+        }).catch(mongoose.Error, (err) => {
+            var errors = {};
+            _.each(err.errors, (error, field) => {
+                errors[field] = error.message;
+            });
+            response.status(403).json(errors);
         }).catch((err) => {
-            console.log(err.stack);
             response.status(500).json(err.stack);
         });
     }

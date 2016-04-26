@@ -10,8 +10,6 @@ export module CommentModel {
         replyTo:string;
         authorId:string;
         postId:string;
-        created:Date;
-        updated:Date;
     }
 
     export var _schema:mongoose.Schema = new mongoose.Schema({
@@ -34,16 +32,8 @@ export module CommentModel {
         postId: {
             type: ObjectId,
             ref: 'Post'
-        },
-        created: {
-            type: Date,
-            default: Date.now
-        },
-        updated: {
-            type: Date,
-            default: Date.now
         }
-    }).pre('save', function (next) {
+    }, {timestamps: {createdAt: 'created_at'}}).pre('save', function (next) {
         this.updated = new Date();
         next();
     });

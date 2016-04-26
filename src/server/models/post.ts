@@ -11,8 +11,6 @@ export module PostModel {
         title:string;
         content:string;
         authorId:string;
-        created:Date;
-        updated:Date;
     }
 
     export var _schema:mongoose.Schema = new mongoose.Schema({
@@ -31,16 +29,8 @@ export module PostModel {
         authorId: {
             type: ObjectId,
             ref: 'User'
-        },
-        created: {
-            type: Date,
-            default: Date.now
-        },
-        updated: {
-            type: Date,
-            default: Date.now
         }
-    }).pre('save', function (next) {
+    }, {timestamps: {createdAt: 'created_at'}}).pre('save', function (next) {
         this.updated = new Date();
         next();
     });
