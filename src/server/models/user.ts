@@ -29,12 +29,10 @@ export module UserModel {
         },
         firstName: {
             type: String,
-            require: true,
             validate: validators.isAlpha()
         },
         lastName: {
             type: String,
-            require: true,
             validate: validators.isAlpha()
         },
         email: {
@@ -48,8 +46,13 @@ export module UserModel {
         },
         comments: [CommentModel._schema],
         posts: [PostModel._schema]
-    }, {timestamps: {createdAt: 'created_at'}}).pre('save', function (next) {
+    }, {
+        timestamps: {createdAt: 'created_at'}
+    }).pre('save', function (next) {
         this.updated = new Date();
+        next();
+    }).pre('get', function (next) {
+        delete this.password;
         next();
     });
 

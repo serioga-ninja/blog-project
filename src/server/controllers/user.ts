@@ -2,6 +2,9 @@ import passport= require('passport');
 import {UserModel} from "../models";
 import {APIError} from "../lib/api-error";
 import * as auth from "../middlewares/auth";
+import {APIMethod} from "../lib/api-method";
+import * as express from "express";
+import {UserService} from "../services";
 import mongoose = require('mongoose');
 import Promise = require('bluebird');
 
@@ -12,7 +15,9 @@ export class UserController {
         this._document = document;
     }
 
-    static findOrCreate(data:UserModel._interface):Promise <UserController> {
+    static findOrCreate = APIMethod((req:express.Request) => {
+        var data:UserModel._interface = req.body;
+
         return new Promise <UserController>((resolve:Function, reject:Function) => {
             UserModel.model.findOne({
                 username: data.username
@@ -26,26 +31,37 @@ export class UserController {
                     err ? reject(err) : resolve(new UserController(user));
                 });
             });
+        }).then((User:UserController) => {
+            return User.fields;
         });
-    }
+    });
 
-    static findById(id:string):Promise < UserController > {
-        return new Promise < UserController >((resolve, reject) => {
-            UserModel.model.findById(id)
-                .exec()
-                .onResolve((err, user) => {
-                    err ? reject(err) : resolve(new UserController(user));
-                });
-        })
-    }
+    /**
+     * Return user by username
+     * @returns {Promise<UserController>}
+     */
+    static findByUsername = APIMethod((req:express.Request) => {
+        var username:string = req.params.username;
+        return UserService.getByUsername(username);
+    });
 
-    static create(data:Object):Promise<UserController> {
-        return new Promise <UserController>((resolve, reject) => {
-            UserModel.model.create(data).onResolve((err, user) => {
-                err ? reject(err) : resolve(new UserController(user));
-            });
+    static update = APIMethod((req:express.Request) => {
+        var username:string = req.params.username,
+            data:UserModel._interface = req.body;
+
+        if (data.password) {
+            data.password = auth.createHash(data.password);
+        }
+        return UserModel.model.update({username: username}, data, {runValidators: true}).exec().onResolve((err, user) => {
+            if (err) {
+                throw err;
+            }
+            if (!user) {
+                throw new APIError('User not found!', 404);
+            }
+            return user;
         });
-    }
+    });
 
     get fields():Object {
         return this._document;
