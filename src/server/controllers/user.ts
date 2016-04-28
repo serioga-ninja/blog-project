@@ -49,9 +49,6 @@ export class UserController {
         var username:string = req.params.username,
             data:UserModel._interface = req.body;
 
-        if (data.password) {
-            data.password = auth.createHash(data.password);
-        }
         return UserModel.model.update({username: username}, data, {runValidators: true}).exec().onResolve((err, user) => {
             if (err) {
                 throw err;

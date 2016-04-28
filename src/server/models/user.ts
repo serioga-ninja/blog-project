@@ -1,5 +1,6 @@
 import mongoose = require('mongoose');
 import {PostModel, CommentModel} from "./index";
+import * as auth from "../middlewares/auth";
 
 var Schema = mongoose.Schema,
     ObjectId = Schema.Types.ObjectId,
@@ -49,6 +50,9 @@ export module UserModel {
     }, {
         timestamps: {createdAt: 'created_at'}
     }).pre('save', function (next) {
+        if (this.password) {
+            this.password = auth.createHash(this.password);
+        }
         this.updated = new Date();
         next();
     }).pre('get', function (next) {
