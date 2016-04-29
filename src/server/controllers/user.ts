@@ -1,18 +1,18 @@
 import passport= require('passport');
 import {UserModel} from "../models";
 import {APIError} from "../lib/api-error";
-import * as auth from "../middlewares/auth";
 import {APIMethod} from "../lib/api-method";
 import * as express from "express";
 import {UserService} from "../services";
-import mongoose = require('mongoose');
 import Promise = require('bluebird');
+import {Controller} from "./controller";
 
-export class UserController {
+export class UserController extends Controller {
     private _document:UserModel._interface;
 
     constructor(document:UserModel._interface) {
         this._document = document;
+        super();
     }
 
     static findOrCreate = APIMethod((req:express.Request) => {
@@ -65,8 +65,4 @@ export class UserController {
             return 'OK'
         });
     });
-
-    get fields():Object {
-        return this._document;
-    }
 }
