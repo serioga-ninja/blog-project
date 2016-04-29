@@ -53,9 +53,8 @@ export module UserModel {
         if (this.password) {
             this.password = auth.createHash(this.password);
         }
-        this.updated = new Date();
         next();
-    }).pre('get', function (next) {
+    }).pre('get', function (a, b, next) {
         delete this.password;
         next();
     });

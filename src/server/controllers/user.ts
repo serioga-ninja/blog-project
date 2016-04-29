@@ -25,7 +25,6 @@ export class UserController {
                 if (user) {
                     reject(new APIError('Username already exists.'));
                 }
-                data.password = auth.createHash(data.password);
 
                 UserModel.model.create(data).onResolve((err, user) => {
                     err ? reject(err) : resolve(new UserController(user));
