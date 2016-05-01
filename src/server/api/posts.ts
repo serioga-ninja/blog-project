@@ -6,10 +6,10 @@ var app = express();
 
 export function index() {
     app.get('/', PostsController.all);
-    // app.get('/:username', UserController.findByUsername);
+    app.post('/:id/archive', PostsController.archive);
+    app.delete('/:id', PostsController.remove);
     app.post('/new', PostsController.create);
-    // app.put('/:username', UserController.update);
-    // app.delete('/:username', UserController.destroy);
+    app.put('/:id', PostsController.update);
 
     return app;
 }
