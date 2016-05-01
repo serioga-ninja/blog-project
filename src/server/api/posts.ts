@@ -5,6 +5,7 @@ import mongoose = require('mongoose');
 var app = express();
 
 export function index() {
+    app.get('/', PostsController.all);
     // app.get('/:username', UserController.findByUsername);
     app.post('/new', PostsController.create);
     // app.put('/:username', UserController.update);
