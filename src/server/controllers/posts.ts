@@ -26,7 +26,7 @@ export class PostsController {
             id:string = req.params.id;
 
         return new Promise<PostsController>((resolve:Function, reject:Function) => {
-            PostModel.model.update({id: id}, data).onResolve((err, Post) => {
+            PostModel.model.update({id: id}, data).exec((err, Post) => {
                 err ? reject(err) : resolve(new PostsController(Post));
             });
         }).then((Post:PostsController)=> {
