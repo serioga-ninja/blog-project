@@ -5,14 +5,12 @@ import {APIMethod} from "../lib/api-method";
 import * as express from "express";
 import {UserService} from "../services";
 import Promise = require('bluebird');
-import {Controller} from "./controller";
 
-export class UserController extends Controller {
+export class UserController {
     private _document:UserModel._interface;
 
     constructor(document:UserModel._interface) {
         this._document = document;
-        super();
     }
 
     static findOrCreate = APIMethod((req:express.Request) => {
@@ -65,4 +63,8 @@ export class UserController extends Controller {
             return 'OK'
         });
     });
+
+    get fields():Object {
+        return this._document;
+    }
 }

@@ -5,7 +5,7 @@ var app = express();
 export function index() {
     
     app.use('/users', require('./users').index());
-    app.use('/users', require('./posts').index());
+    app.use('/posts', require('./posts').index());
 
     return app;
 }

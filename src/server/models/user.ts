@@ -44,9 +44,7 @@ export module UserModel {
         password: {
             type: String,
             require: true
-        },
-        comments: [CommentModel._schema],
-        posts: [PostModel._schema]
+        }
     }, {
         timestamps: {createdAt: 'created_at'}
     }).pre('save', function (next) {

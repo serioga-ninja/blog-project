@@ -11,6 +11,10 @@ export module PostModel {
         title:string;
         content:string;
         authorId:string;
+        posted:boolean;
+        postedAt:Date;
+        archived:boolean;
+        archivedAt:Date;
     }
 
     export var _schema:mongoose.Schema = new mongoose.Schema({
@@ -29,6 +33,20 @@ export module PostModel {
         authorId: {
             type: ObjectId,
             ref: 'User'
+        },
+        posted: {
+            type: Boolean,
+            default: true
+        },
+        postedAt: {
+            type: Date
+        },
+        archived: {
+            type: Boolean,
+            default: false
+        },
+        archivedAt: {
+            type: Date
         }
     }, {timestamps: {createdAt: 'created_at'}}).pre('save', function (next) {
         this.updated = new Date();

@@ -1,14 +1,12 @@
 import {PostModel} from "../models";
 import {APIMethod} from "../lib/api-method";
 import * as express from "express";
-import {Controller} from "./controller";
 
-export class PostsController extends Controller {
+export class PostsController {
     private _document:PostModel._interface;
 
     constructor(document:PostModel._interface) {
         this._document = document;
-        super();
     }
 
     static create = APIMethod((req:express.Request) => {
@@ -22,4 +20,9 @@ export class PostsController extends Controller {
             return Post.fields;
         });
     });
+
+
+    get fields():Object {
+        return this._document;
+    }
 }
