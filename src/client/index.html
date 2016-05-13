@@ -2,16 +2,15 @@
 <html lang="en" ng-app="blog-project">
 <head>
     <meta charset="UTF-8">
+    <base href="/">
     <title>Blog</title>
+    <link rel="stylesheet" href="ext/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-<div ng-controller="StoreController as store">
-    <h2>{{store.test}}</h2>
-    <div ng-repeat="product in store.products">
-        <h1>{{product.title}}</h1>
-    </div>
-</div>
+<div ui-view></div>
 <script type="text/javascript" src="ext/angular/angular.min.js"></script>
+<script type="text/javascript" src="ext/angular-ui-router/release/angular-ui-router.min.js"></script>
 <script type="text/javascript" src="app/app.js"></script>
 </body>
 </html>

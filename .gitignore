@@ -16,6 +16,7 @@ lib-cov
 coverage
 
 # Grunt intermediate storage (http://gruntjs.com/creating-plugins#storing-task-files)
+/src/client/ext
 .grunt
 
 # node-waf configuration

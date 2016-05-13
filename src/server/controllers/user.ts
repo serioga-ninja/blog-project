@@ -39,7 +39,9 @@ export class UserController {
      */
     static findByUsername = APIMethod((req:express.Request) => {
         var username:string = req.params.username;
-        return UserService.getByUsername(username);
+        return UserService.getByUsername(username).then((User:UserModel._interface) => {
+            return new UserController(User);
+        })
     });
 
     static update = APIMethod((req:express.Request) => {
