@@ -41,6 +41,23 @@ module.exports = function (grunt) {
                 cwd: 'src/client/',
                 src: 'media/**',
                 dest: 'dist/'
+            },
+            buildTemplates: {
+                expand: true,
+                cwd: 'src/client/app/',
+                src: 'templates/**',
+                dest: 'dist/'
+            }
+        },
+
+        ngAnnotate: {
+            options: {
+                singleQuotes: true
+            },
+            app: {
+                files: {
+                    './dist/scripts/appaz.js': ['src/client/app/**/*.js']
+                }
             }
         },
 
@@ -52,14 +69,22 @@ module.exports = function (grunt) {
                 src: ['src/client/app/**/*.js'],
                 dest: 'dist/scripts/app.js'
             },
-        }
+        },
+
+        watch: {
+            javascript: {
+                files: ['src/client/app/**/*.js'],
+                tasks: ['concat']
+            }
+        },
     });
 
     grunt.registerTask('default', [
         'clean:dist',
         'ngtemplates',
         'copy',
-        'concat'
+        'concat',
+        'watch'
     ]);
 
     // grunt.registerTask('default', ['watch']);

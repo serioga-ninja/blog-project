@@ -5,18 +5,21 @@
 
         $stateProvider.state("guest", {
             abstract: true,
-            templateUrl: "app/templates/basics/guest.html"
+            templateUrl: "templates/basics/guest.html"
         }).state('user', {
             abstract: true,
-            templateUrl: 'app/templates/basics/user.html'
+            templateUrl: 'templates/basics/user.html'
         }).state('single-form', {
             abstract: true,
-            templateUrl: 'app/templates/basics/form.html'
+            templateUrl: 'templates/basics/form.html'
         }).state('login', {
             url: '/login',
             parent: 'single-form',
-            templateUrl: 'app/templates/auth/login.html'
+            templateUrl: 'templates/auth/login.html',
+            controller: 'AuthController',
+            controllerAs: 'Auth'
         });
+
         $locationProvider.html5Mode(true);
         $urlRouterProvider.otherwise("/login");
 
