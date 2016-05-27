@@ -10,7 +10,7 @@
                     password: ''
                 };
 
-                $scope.login = login = function (FormData) {
+                var login = $scope.login = function (FormData) {
                     AuthRouter(FormData).$authenticate();
                 }
             }

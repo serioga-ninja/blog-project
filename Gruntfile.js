@@ -75,6 +75,10 @@ module.exports = function (grunt) {
             javascript: {
                 files: ['src/client/app/**/*.js'],
                 tasks: ['concat']
+            },
+            html: {
+                files: ['src/client/app/templates/**/*.html'],
+                tasks: ['copy']
             }
         },
     });

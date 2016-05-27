@@ -1,6 +1,7 @@
 (function () {
     var app = angular.module('blog-project', [
-        'ui.router'
+        'ui.router',
+        'ngResource'
     ]).config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
 
         $stateProvider.state("guest", {
