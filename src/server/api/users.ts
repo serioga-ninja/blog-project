@@ -1,7 +1,7 @@
 import * as express from "express";
 import {UserController} from "../controllers/user";
 import mongoose = require('mongoose');
-import {AuthMiddleware} from "../middleware/auth";
+import {AuthMiddleware} from "../middlewares/auth";
 
 var app = express();
 

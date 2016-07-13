@@ -1,5 +1,8 @@
-import bCrypt = require('bcrypt-nodejs');
+import * as express from "express";
 
-export function createHash(password):string {
-    return bCrypt.hashSync(password, bCrypt.genSaltSync(10));
+
+export class AuthMiddleware {
+    static isAuthorised = function (req:express.Request, res:express.Response, next:Function) {
+        next();
+    }
 }
