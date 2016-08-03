@@ -1,6 +1,6 @@
 import * as jwt from 'jsonwebtoken';
 import bCrypt = require('bcrypt-nodejs');
-import config from "../config";
+import config from "../../config";
 var crypto = require('crypto');
 
 export class AuthHelper {
@@ -8,7 +8,7 @@ export class AuthHelper {
     /**
      * Generate auth token
      * @param id
-     * @returns {Promise<T>|Promise}
+     * @returns {Promise<any>|Promise}
      */
     public static generateToken(id:string) {
         return new Promise((resolve) => {

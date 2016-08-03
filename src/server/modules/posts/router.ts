@@ -1,11 +1,7 @@
-import * as express from "express";
-import {PostsController} from "../controllers/posts";
-import mongoose = require('mongoose');
-import {AuthMiddleware} from "../middlewares/auth";
+import {PostsController} from "./controller";
+import {AuthMiddleware} from "../auth/middleware";
 
-var app = express();
-
-export function index() {
+export function index(app) {
     app.get('/', PostsController.all);
     app.post('/:id/archive', PostsController.archive);
     app.delete('/:id', AuthMiddleware.isAuthorised, PostsController.remove);

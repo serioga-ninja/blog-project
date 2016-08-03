@@ -1,12 +1,14 @@
 import bodyParser = require("body-parser");
 import morgan = require('morgan');
 import express = require('express');
+import fs = require('fs');
 var path = require('path');
 
 // Mongo
 import mongoose = require('mongoose');
+import {Express} from "express";
 
-export function expresss(app) {
+export function expresss(app:Express) {
     app.use(bodyParser.urlencoded({extended: true}));
     app.use(bodyParser.json());
     app.use(morgan('combined')); // logging
@@ -19,7 +21,22 @@ export function expresss(app) {
     app.use('/scripts', express.static(path.join(__dirname, '..', '..', 'dist', 'scripts')));
     app.use('/templates', express.static(path.join(__dirname, '..', '..', 'dist', 'templates')));
 
-    app.use('/api/v1', require('./api').index());
+    var modules = [
+        // 'auth',
+        // 'comments',
+        // 'posts',
+        'user'
+    ];
+
+    for(var i = 0; i < modules.length; i++) {
+        // var router = './modules/' + modules[i] + '/router';
+        var controller = './modules/' + modules[i] + '/controller';
+        // if(fs.existsSync(router)) {
+        //     require(router).index(app);
+        // }
+        var Controller = require(controller);
+        (new Controller()).register(app);
+    }
 
     app.get('/*', (req:express.Request, res:express.Response) => {
         res.sendFile('index.html', {root: __dirname + '/../../src/client'});

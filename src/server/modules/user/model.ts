@@ -1,6 +1,5 @@
 import mongoose = require('mongoose');
-import {PostModel, CommentModel} from "./index";
-import {AuthHelper} from '../helpers/auth'
+import {AuthHelper} from '../auth/helper';
 
 var Schema = mongoose.Schema,
     ObjectId = Schema.Types.ObjectId,

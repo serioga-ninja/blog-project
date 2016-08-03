@@ -1,5 +1,5 @@
-import {PostModel} from "../models";
-import {APIMethod} from "../lib/api-method";
+import {PostModel} from "./model";
+import {APIMethod} from "../../lib/api-method";
 import * as express from "express";
 
 export class PostsController {

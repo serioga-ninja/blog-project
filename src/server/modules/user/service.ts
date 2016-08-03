@@ -1,6 +1,5 @@
-import {UserModel} from "../models";
-import {UserController} from "../controllers/user";
-import {APIError} from "../lib/api-error";
+import {UserModel} from "./model";
+import {APIError} from "../../lib/api-error";
 
 export module UserService {
 

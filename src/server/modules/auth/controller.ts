@@ -1,9 +1,9 @@
-import {AuthHelper} from '../helpers/auth';
+import {AuthHelper} from './helper';
 import * as express from "express";
-import {APIMethod} from "../lib/api-method";
-import {UserService} from "../services";
-import {UserModel} from "../models";
-import {APIError} from "../lib/api-error";
+import {APIMethod} from "../../lib/api-method";
+import {UserService} from "../user/service";
+import {UserModel} from "../user/model";
+import {APIError} from "../../lib/api-error";
 
 export class AuthController {
 

@@ -5,7 +5,7 @@ import Promise = require('bluebird');
 var mongoose = require("mongoose");
 
 
-export function APIMethod(fn:Function) {
+export function APIMethod(fn:Function):Function {
     var method = Promise.method(fn);
 
     return (request:express.Request, response:express.Response) => {
@@ -22,5 +22,16 @@ export function APIMethod(fn:Function) {
         }).catch((err) => {
             response.status(500).json(err.stack);
         });
+    }
+}
+
+export function MiddlewareMethod(fn:Function):Function {
+    var method = Promise.method(fn);
+
+    return function (request, response, next) {
+        return method(request, response)
+            .then(function () {
+                next();
+            });
     }
 }
