@@ -2,6 +2,7 @@ import bodyParser = require("body-parser");
 import morgan = require('morgan');
 import express = require('express');
 import fs = require('fs');
+import Promise = require('bluebird');
 var path = require('path');
 
 // Mongo
@@ -28,7 +29,7 @@ export function expresss(app:Express) {
         'user'
     ];
 
-    for(var i = 0; i < modules.length; i++) {
+    for (var i = 0; i < modules.length; i++) {
         // var router = './modules/' + modules[i] + '/router';
         var controller = './modules/' + modules[i] + '/controller';
         // if(fs.existsSync(router)) {
@@ -45,6 +46,20 @@ export function expresss(app:Express) {
 
 export function database() {
     mongoose.connect('mongodb://localhost/blog_project');
+}
+
+export function prepare() {
+    if (!Promise.prototype.spread) {
+        Promise.prototype.spread = function (fn) {
+            return this.then(function (args) {
+                return Promise.all(args); // wait for all
+            }).then(function (args) {
+                //this is always undefined in A+ complaint, but just in case
+                return fn.apply(this, args);
+            });
+
+        };
+    }
 }
 
 export default {

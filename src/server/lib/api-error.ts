@@ -13,3 +13,27 @@ export class AuthError extends Error {
         super(message);
     }
 }
+
+export class MiddlewareError extends Error {
+    public name = 'MiddlewareError';
+
+    constructor(public message?:string, public code:number = 400) {
+        super(message);
+    }
+}
+
+export class NotFound extends Error {
+    public name = 'NotFound';
+
+    constructor(public message?:string, public code:number = 404) {
+        super(message);
+    }
+}
+
+export class ModelNotSaved extends Error {
+    public name = 'ModelNotSaved';
+
+    constructor(public message?:string, public code:number = 500) {
+        super(message);
+    }
+}

@@ -1,9 +1,13 @@
 import mongoose = require('mongoose');
 import express = require('express');
 import {APIMethod, MiddlewareMethod} from "./api-method";
-import Request = Express.Request;
-import {buildUrl} from "../helpers/api";
+import * as APIHelper from "../helpers/api";
 import * as _ from "lodash";
+import {hasIdAttribute, preload} from "../middleware/api";
+import {NotFound, ModelNotSaved} from "./api-error";
+import {ERROR_MESSAGES} from "../helpers/messages";
+import Promise = require('bluebird');
+import * as interfaces from "../interfaces";
 
 interface controller {
     model:mongoose.Model<any>
@@ -26,26 +30,26 @@ function bind(fn:Function, scope:Object) {
 
 
 export abstract class ApiController implements controller {
-    urlPart:string;
-    model:mongoose.Model<any>;
-    // base methods for the controller
-    private methods:methodObj[];
+    urlPart:string; // the part of url which /api/v1/:urlPart/bla-bla
+    model:mongoose.Model<any>; // model related to this controller
+    idAttribute:string = '_id'; // id attribute, or how we should looking for the entities
+    private methods:methodObj[]; // base methods for the controller
 
-    constructor() {
+    constructor(methods:methodObj[] = []) {
         this.methods = [
             {
                 method: this.single,
                 type: 'get',
                 withId: true,
                 uriPart: '',
-                middleware: []
+                middleware: [hasIdAttribute(this.idAttribute), preload(this.idAttribute, this.model)]
             },
             {
                 method: this.save,
                 type: 'put',
                 withId: true,
                 uriPart: '',
-                middleware: []
+                middleware: [hasIdAttribute(this.idAttribute), preload(this.idAttribute, this.model)]
             },
             {
                 method: this.create,
@@ -59,7 +63,7 @@ export abstract class ApiController implements controller {
                 type: 'delete',
                 withId: true,
                 uriPart: '',
-                middleware: []
+                middleware: [hasIdAttribute(this.idAttribute)]
             },
             {
                 method: this.query,
@@ -68,13 +72,17 @@ export abstract class ApiController implements controller {
                 uriPart: '',
                 middleware: []
             }
-        ];
+        ].concat(methods);
     }
 
+    /**
+     * Method registers all api methods for the current controller
+     * @param app
+     */
     register(app:express.Router) {
         var self = this;
         _.each(this.methods, (method:methodObj) => {
-            var routParams:Array<any> = [buildUrl(this.urlPart, method.withId)];
+            var routParams:Array<any> = [APIHelper.buildUrl(this.urlPart, method.withId, this.idAttribute)];
 
             _.each(method.middleware, (middleware:Function) => {
                 routParams.push(MiddlewareMethod(middleware));
@@ -85,24 +93,82 @@ export abstract class ApiController implements controller {
         })
     }
 
+    /**
+     * Fires before model was sending to the response
+     * @param model
+     * @return {Object}
+     */
+    public beforeModelSend(model):Object {
+        return APIHelper.toModelView(model);
+    }
 
-    public single = APIMethod((req:Request) => {
-        return 'single';
+    /**
+     * Prepare request.body and set it to the model
+     * @param model
+     * @param data
+     * @return {any}
+     */
+    public prepareData(model:mongoose.Model<any>, data:Object) {
+        return new model(data);
+    }
+
+    //--------------------- base api methods -------------------
+    /**
+     * Method returns single model
+     * @type {Function}
+     */
+    public single = APIMethod((req:interfaces.MyRequest) => {
+        var search = {};
+        search[this.idAttribute] = req.params[this.idAttribute];
+        return Promise.resolve(this.beforeModelSend(req.model))
     });
 
-    public save = APIMethod((req:Request) => {
+    /**
+     * Method saves single model
+     * @type {Function}
+     */
+    public save = APIMethod((req:interfaces.MyRequest) => {
         return 'save';
     });
 
-    public create = APIMethod((req:Request) => {
-        return 'create';
+    /**
+     * Method creates single model
+     * @type {Function}
+     */
+    public create = APIMethod((req:interfaces.MyRequest) => {
+        var self = this;
+        var data = req.body;
+
+        return new Promise((resolve, reject) => {
+            return Promise
+                .resolve(null)
+                .then(() => {
+                    return [this.model, data];
+                })
+                .spread(this.prepareData)
+                .then((model:mongoose.Model<any>) => {
+                    return model.save((err) => {
+                        err ? reject(ERROR_MESSAGES.model_not_saved) : resolve(self.beforeModelSend(model));
+                    })
+                })
+        });
     });
 
-    public destroy = APIMethod((req:Request) => {
+
+    /**
+     * Method delete the model
+     * @type {Function}
+     */
+    public destroy = APIMethod((req:interfaces.MyRequest) => {
         return 'destroy';
     });
 
-    public query = APIMethod((req:Request) => {
+
+    /**
+     * Method returns single model for the collection according to the query params
+     * @type {Function}
+     */
+    public query = APIMethod((req:interfaces.MyRequest) => {
         return 'query';
     });
 }
