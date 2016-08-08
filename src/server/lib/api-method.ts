@@ -18,10 +18,9 @@ export function APIMethod(fn: Function): Function {
             _.each(err.errors, (error, field) => {
                 errors[field] = error.message;
             });
-            response.status(403).json(errors);
+            response.status(400).json(errors);
         }).catch(mongoose.Error.ValidationError, (err) => {
-            console.log('err', err);
-            response.status(403).json(err);
+            response.status(400).json(err);
         }).catch((err) => {
             response.status(500).json(err.stack);
         });

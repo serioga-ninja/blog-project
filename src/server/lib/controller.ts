@@ -112,20 +112,12 @@ export abstract class ApiController implements controller {
         return data;
     }
 
-    /**
-     * Prepare model before the save
-     * @param data
-     */
-    public prepareModel(data: Object) {
-        return new this.model(data);
-    }
-
     public beforeSave() {
         // TODO
     }
 
-    public validate(model: mongoose.Model<any>) {
-        return model;
+    public validate(data: Object) {
+        return data;
     }
 
     public afterSave() {
@@ -161,6 +153,8 @@ export abstract class ApiController implements controller {
      */
     public save = APIMethod((req: interfaces.MyRequest) => {
         var data = this.requestToData(req.body);
+        var search = {};
+        search[this.idAttribute] = req.params[this.idAttribute];
 
         return Promise
             .bind(this)
@@ -168,10 +162,11 @@ export abstract class ApiController implements controller {
                 return [data, false];
             })
             .spread(this.prepareData)
-            .then(this.prepareModel)
             .then(this.validate)
-            .then((model: mongoose.Model<any>) => {
-                return model.save();
+            .then((data: Object) => {
+                req.model.set(data);
+
+                return req.model.save();
             })
             .then(this.beforeModelSend);
     });
@@ -189,9 +184,10 @@ export abstract class ApiController implements controller {
                 return [data, true];
             })
             .spread(this.prepareData)
-            .then(this.prepareModel)
             .then(this.validate)
-            .then((model: mongoose.Model<any>) => {
+            .then((data:Object) => {
+                let model = new this.model(data);
+
                 return model.save();
             })
             .then(this.beforeModelSend);

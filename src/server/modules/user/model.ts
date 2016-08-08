@@ -49,7 +49,7 @@ export module UserModel {
         timestamps: {createdAt: 'created_at'}
     }).pre('save', function (next) {
         var _this = this.toObject();
-        if (this.password) {
+        if (_this.password) {
             this.password = AuthHelper.createHash(_this.password);
         }
         next();
@@ -58,7 +58,6 @@ export module UserModel {
         next();
     });
 
-    _schema.plugin(uniqueValidator);
 
     export var model = mongoose.model<_interface>('User', _schema);
 }
