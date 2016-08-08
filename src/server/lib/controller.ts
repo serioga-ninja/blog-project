@@ -185,7 +185,7 @@ export abstract class ApiController implements controller {
             })
             .spread(this.prepareData)
             .then(this.validate)
-            .then((data:Object) => {
+            .then((data: Object) => {
                 let model = new this.model(data);
 
                 return model.save();
@@ -219,6 +219,20 @@ export abstract class ApiController implements controller {
      * @type {Function}
      */
     public query = APIMethod((req: interfaces.MyRequest) => {
-        return 'query';
+        var query = req.query,
+            pageNumber = parseInt(query.page, 10) || 1,
+            limit = parseInt(query.limit, 10) || 10,
+            self = this;
+
+
+        return new Promise((resolve: Function, reject: Function) => {
+            self.model.find({})
+                .skip((pageNumber - 1) * limit)
+                .limit(limit)
+                .sort({created_at: 1})
+                .exec((err, objects) => {
+                    err ? reject(err) : resolve(objects);
+                });
+        });
     });
 }
