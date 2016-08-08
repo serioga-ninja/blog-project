@@ -5,11 +5,11 @@ import Promise = require('bluebird');
 var mongoose = require("mongoose");
 
 
-export function APIMethod(fn:Function):Function {
+export function APIMethod(fn: Function): Function {
     var method = Promise.method(fn);
 
-    return (request:express.Request, response:express.Response) => {
-        method(request, response).then((res:Object) => {
+    return (request: express.Request, response: express.Response) => {
+        method(request, response).then((res: Object) => {
             response.status(200).json(res);
         }).catch(APIError, (err) => {
             response.status(err.code).json(err.message);
@@ -19,13 +19,16 @@ export function APIMethod(fn:Function):Function {
                 errors[field] = error.message;
             });
             response.status(403).json(errors);
+        }).catch(mongoose.Error.ValidationError, (err) => {
+            console.log('err', err);
+            response.status(403).json(err);
         }).catch((err) => {
             response.status(500).json(err.stack);
         });
     }
 }
 
-export function MiddlewareMethod(fn:Function):Function {
+export function MiddlewareMethod(fn: Function): Function {
     var method = Promise.method(fn);
 
     return function (request, response, next) {

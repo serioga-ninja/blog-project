@@ -3,7 +3,8 @@ import {AuthHelper} from '../auth/helper';
 
 var Schema = mongoose.Schema,
     ObjectId = Schema.Types.ObjectId,
-    validators = require('mongoose-validators');
+    validators = require('mongoose-validators'),
+    uniqueValidator = require('mongoose-unique-validator');
 
 export module UserModel {
     export interface _interface extends mongoose.Document {
@@ -56,6 +57,8 @@ export module UserModel {
         delete this.password;
         next();
     });
+
+    _schema.plugin(uniqueValidator);
 
     export var model = mongoose.model<_interface>('User', _schema);
 }
