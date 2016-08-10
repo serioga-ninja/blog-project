@@ -9,7 +9,7 @@ var path = require('path');
 import mongoose = require('mongoose');
 import {Express} from "express";
 
-export function expresss(app:Express) {
+export function expresss(app: Express) {
     app.use(bodyParser.urlencoded({extended: true}));
     app.use(bodyParser.json());
     app.use(morgan('combined')); // logging
@@ -23,7 +23,7 @@ export function expresss(app:Express) {
     app.use('/templates', express.static(path.join(__dirname, '..', '..', 'dist', 'templates')));
 
     var modules = [
-        // 'auth',
+        'auth',
         // 'comments',
         // 'posts',
         'user'
@@ -39,7 +39,7 @@ export function expresss(app:Express) {
         (new Controller()).register(app);
     }
 
-    app.get('/*', (req:express.Request, res:express.Response) => {
+    app.get('/*', (req: express.Request, res: express.Response) => {
         res.sendFile('index.html', {root: __dirname + '/../../src/client'});
     });
 }

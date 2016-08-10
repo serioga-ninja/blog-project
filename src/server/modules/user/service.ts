@@ -3,9 +3,9 @@ import {APIError} from "../../lib/api-error";
 
 export module UserService {
 
-    export function getByUsername(username:String):Promise<UserModel._interface> {
+    export function getByQuery(query): Promise<UserModel._interface> {
         return new Promise < UserModel._interface >((resolve, reject) => {
-            UserModel.model.findOne({username: username}).exec((err, user) => {
+            UserModel.model.findOne(query).exec((err, user) => {
                 if (!user) {
                     reject(new APIError('User not found!', 404));
                 }
@@ -14,9 +14,15 @@ export module UserService {
         })
     }
 
-    export function getByUsernameObject(username:String):Promise<Object> {
-        return getByUsername(username).then((user) => {
+    export function getByUsername(username: string): Promise<Object> {
+        return getByQuery({username: username}).then((user) => {
             return user.toObject();
-        })
+        });
+    }
+
+    export function getById(id: string): Promise<Object> {
+        return getByQuery({_id: id}).then((user) => {
+            return user.toObject();
+        });
     }
 }

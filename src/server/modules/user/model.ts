@@ -1,23 +1,21 @@
 import mongoose = require('mongoose');
-import {AuthHelper} from '../auth/helper';
+import AuthHelper = require('../auth/helper');
 
 var Schema = mongoose.Schema,
-    ObjectId = Schema.Types.ObjectId,
-    validators = require('mongoose-validators'),
-    uniqueValidator = require('mongoose-unique-validator');
+    validators = require('mongoose-validators');
 
 export module UserModel {
     export interface _interface extends mongoose.Document {
-        provider:string;
-        id:string;
-        username:string;
-        firstName:string;
-        lastName:string;
-        email:string;
-        password:string;
+        provider: string;
+        id: string;
+        username: string;
+        firstName: string;
+        lastName: string;
+        email: string;
+        password: string;
     }
 
-    export var _schema:mongoose.Schema = new mongoose.Schema({
+    export var _schema: mongoose.Schema = new Schema({
         id: {
             type: String,
             require: true

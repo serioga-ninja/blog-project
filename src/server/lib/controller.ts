@@ -4,14 +4,12 @@ import {APIMethod, MiddlewareMethod} from "./api-method";
 import * as APIHelper from "../helpers/api";
 import * as _ from "lodash";
 import {hasIdAttribute, preload} from "../middleware/api";
-import {NotFound, ModelNotSaved} from "./api-error";
-import {ERROR_MESSAGES} from "../helpers/messages";
 import Promise = require('bluebird');
 import * as interfaces from "../interfaces";
 
-interface controller {
-    model: mongoose.Model<any>
+export interface controller {
     urlPart: string;
+    idAttribute?: string;
 }
 
 export interface methodObj {
@@ -31,19 +29,12 @@ function bind(fn: Function, scope: Object) {
 
 export abstract class ApiController implements controller {
     urlPart: string; // the part of url which /api/v1/:urlPart/bla-bla
-    model: mongoose.Model<any>; // model related to this controller
-    idAttribute: string = '_id'; // id attribute, or how we should looking for the entities
+    idAttribute: string = '_id';
+    private _methods;
+    // id attribute, or how we should looking for the entities
 
-    constructor(private methods: methodObj[] = []) {
-    }
-
-    /**
-     * Method registers all api methods for the current controller
-     * @param app
-     */
-    register(app: express.Router) {
-        var self = this;
-        this.methods = this.methods.concat([
+    constructor(private model?: mongoose.Model<any>) {
+        this._methods = [
             {
                 method: this.single,
                 type: 'get',
@@ -79,9 +70,26 @@ export abstract class ApiController implements controller {
                 uriPart: '',
                 middleware: []
             }
-        ]);
+        ];
+    }
 
-        _.each(this.methods, (method: methodObj) => {
+    get methods() {
+        return this._methods;
+    }
+
+    set methods(methods: Array<methodObj>) {
+        this._methods = this._methods.concat(methods);
+    }
+
+    /**
+     * Method registers all api methods for the current controller
+     * @param app
+     */
+    register(app: express.Router) {
+        var self = this;
+        var methods = this.methods;
+
+        _.each(methods, (method: methodObj) => {
             var routParams: Array<any> = [APIHelper.buildUrl(this.urlPart, method.withId, this.idAttribute)];
 
             _.each(method.middleware, (middleware: Function) => {
@@ -104,9 +112,9 @@ export abstract class ApiController implements controller {
 
     /**
      * Prepare request.body and set it to the model
-     * @param data
-     * @param isNew
-     * @return {any}
+     * @param {Object} data
+     * @param {boolean} isNew
+     * @returns {Object}
      */
     public prepareData(data: Object, isNew: boolean) {
         return data;
