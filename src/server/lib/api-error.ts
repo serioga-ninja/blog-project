@@ -9,7 +9,7 @@ export class APIError extends Error {
 export class AuthError extends Error {
     public name = "AuthError";
 
-    constructor(public message?: string, public code: number = 400) {
+    constructor(public message?: string, public code: number = 401) {
         super(message);
     }
 }

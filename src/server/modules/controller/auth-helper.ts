@@ -1,4 +1,4 @@
-import * as jwt from 'jsonwebtoken';
+import jwt  = require('jsonwebtoken');
 import bCrypt = require('bcrypt-nodejs');
 import constants = require('../../config/constants');
 import environments = require('../../config/environment');
@@ -8,7 +8,7 @@ interface AuthHelperInterface {
     verify(id:string):void
 }
 
-class AuthHelper implements AuthHelperInterface {
+class TokenAuth implements AuthHelperInterface {
     /**
      * Generate auth token
      * @param {String} id
@@ -22,9 +22,9 @@ class AuthHelper implements AuthHelperInterface {
 
     public verify(token:string) {
         return new Promise((resolve, reject) => {
-            jwt.verify(token, constants.jwt.algorithm, (err, decoded) => {
+            jwt.verify(token, constants.secret, constants.jwt.algorithm, (err, decoded) => {
                 if (err) {
-                    reject(err);
+                    return reject(err);
                 }
                 resolve(decoded.id);
             })
@@ -32,10 +32,6 @@ class AuthHelper implements AuthHelperInterface {
     }
 }
 
-export = (function () {
-    var authHelpers = {
-        token: AuthHelper
-    };
-
-    return authHelpers[environments.AUTHORIZATION];
-})();
+export = {
+    token: TokenAuth
+}[environments.AUTHORIZATION];

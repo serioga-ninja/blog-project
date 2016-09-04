@@ -1,17 +1,15 @@
-import AuthHelper = require('./helper');
+import AuthHelper = require('../../modules/controller/auth-helper');
 import * as express from "express";
 import {APIMethod} from "../../lib/api-method";
 import {UserService} from "../user/service";
 import {UserModel} from "../user/model";
-import {APIError, NotImplemented, AuthError} from "../../lib/api-error";
-import {ApiController, controller} from "../../lib/controller";
-import {Model} from "mongoose";
+import {NotImplemented, AuthError} from "../../lib/api-error";
+import {ApiController, controller} from "../../modules/controller/controller";
 import {checkPassword} from "../../helpers/auth";
 
 
 export = class AuthController extends ApiController implements controller {
     urlPart:string = 'auth';
-
 
     constructor() {
         super();
@@ -27,16 +25,16 @@ export = class AuthController extends ApiController implements controller {
         ];
     }
 
-    public authenticate = APIMethod((req: express.Request) => {
-        var username: string = req.body.username,
-            password: string = req.body.password;
+    public authenticate = APIMethod((req:express.Request) => {
+        var username:string = req.body.username,
+            password:string = req.body.password;
 
-        return UserService.getByUsername(username).then((userData: UserModel._interface) => {
+        return UserService.getByUsername(username).then((userData:UserModel._interface) => {
             if (!checkPassword(userData.password, password)) {
                 throw new AuthError('Email or password mismatch');
             }
 
-            return new AuthHelper().generateToken(userData._id).then((token: string) => {
+            return new AuthHelper().generateToken(userData._id).then((token:string) => {
                 return {
                     token: token
                 };

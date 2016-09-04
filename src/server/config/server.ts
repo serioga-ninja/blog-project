@@ -34,7 +34,7 @@ export = function (app: Express) {
 
     for (var i = 0; i < modules.length; i++) {
         // var router = './modules/' + modules[i] + '/router';
-        var controller = '../modules/' + modules[i] + '/controller';
+        var controller = '../apps/' + modules[i] + '/controller';
         // if(fs.existsSync(router)) {
         //     require(router).index(app);
         // }

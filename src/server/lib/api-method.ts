@@ -3,6 +3,7 @@ import {APIError, AuthError} from "./api-error";
 import * as _ from "lodash";
 import Promise = require('bluebird');
 var mongoose = require("mongoose");
+var jwt  = require('jsonwebtoken');
 
 
 export function APIMethod(fn: Function): Function {
@@ -23,6 +24,8 @@ export function APIMethod(fn: Function): Function {
             response.status(400).json(errors);
         }).catch(mongoose.Error.ValidationError, (err) => {
             response.status(400).json(err);
+        }).catch(jwt.JsonWebTokenError, (err) => {
+            response.status(401).json(err);
         }).catch((err) => {
             response.status(500).json(err.stack);
         });
