@@ -1,3 +1,6 @@
+/**
+ * Created by serioga on 04.09.16.
+ */
 import bodyParser = require("body-parser");
 import morgan = require('morgan');
 import express = require('express');
@@ -6,10 +9,10 @@ import Promise = require('bluebird');
 var path = require('path');
 
 // Mongo
-import mongoose = require('mongoose');
 import {Express} from "express";
 
-export function expresss(app: Express) {
+
+export = function (app: Express) {
     app.use(bodyParser.urlencoded({extended: true}));
     app.use(bodyParser.json());
     app.use(morgan('combined')); // logging
@@ -31,7 +34,7 @@ export function expresss(app: Express) {
 
     for (var i = 0; i < modules.length; i++) {
         // var router = './modules/' + modules[i] + '/router';
-        var controller = './modules/' + modules[i] + '/controller';
+        var controller = '../modules/' + modules[i] + '/controller';
         // if(fs.existsSync(router)) {
         //     require(router).index(app);
         // }
@@ -42,29 +45,4 @@ export function expresss(app: Express) {
     app.get('/*', (req: express.Request, res: express.Response) => {
         res.sendFile('index.html', {root: __dirname + '/../../src/client'});
     });
-}
-
-export function database() {
-    mongoose.connect('mongodb://localhost/blog_project');
-}
-
-export function prepare() {
-    if (!Promise.prototype.spread) {
-        Promise.prototype.spread = function (fn) {
-            return this.then(function (args) {
-                return Promise.all(args); // wait for all
-            }).then(function (args) {
-                //this is always undefined in A+ complaint, but just in case
-                return fn.apply(this, args);
-            });
-
-        };
-    }
-}
-
-export default {
-    jwt: {
-        expiresIn: 60 * 60 * 24 * 7,
-        algorithm: 'HS256'
-    }
 }

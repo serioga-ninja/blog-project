@@ -1,6 +1,9 @@
 import * as jwt from 'jsonwebtoken';
 import bCrypt = require('bcrypt-nodejs');
 var crypto = require('crypto');
+import constants = require('../../config/constants');
+
+
 
 export = class AuthHelper {
 
@@ -11,7 +14,7 @@ export = class AuthHelper {
      */
     public static generateToken(id: string) {
         return new Promise((resolve) => {
-            resolve(jwt.sign({id: id}, 'sometokenhere', {algorithm: 'HS256'}));
+            resolve(jwt.sign({id: id}, constants.secret, {algorithm: constants.jwt.algorithm}));
         });
     }
 

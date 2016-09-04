@@ -1,5 +1,5 @@
 'use strict';
-
+require('dotenv').config();
 require('ts-node').register({ /* options */ });
 var app =  require('./src/server/app');
 
