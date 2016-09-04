@@ -1,5 +1,5 @@
 import mongoose = require('mongoose');
-import AuthHelper = require('../auth/helper');
+import {createHash} from '../../helpers/auth';
 
 var Schema = mongoose.Schema,
     validators = require('mongoose-validators');
@@ -48,7 +48,7 @@ export module UserModel {
     }).pre('save', function (next) {
         var _this = this.toObject();
         if (_this.password) {
-            this.password = AuthHelper.createHash(_this.password);
+            this.password = createHash(_this.password);
         }
         next();
     }).pre('get', function (a, b, next) {

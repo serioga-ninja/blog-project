@@ -6,6 +6,7 @@ import {UserModel} from "../user/model";
 import {APIError, NotImplemented, AuthError} from "../../lib/api-error";
 import {ApiController, controller} from "../../lib/controller";
 import {Model} from "mongoose";
+import {checkPassword} from "../../helpers/auth";
 
 
 export = class AuthController extends ApiController implements controller {
@@ -31,11 +32,11 @@ export = class AuthController extends ApiController implements controller {
             password: string = req.body.password;
 
         return UserService.getByUsername(username).then((userData: UserModel._interface) => {
-            if (!AuthHelper.checkPassword(userData.password, password)) {
+            if (!checkPassword(userData.password, password)) {
                 throw new AuthError('Email or password mismatch');
             }
 
-            return AuthHelper.generateToken(userData._id).then((token: string) => {
+            return new AuthHelper().generateToken(userData._id).then((token: string) => {
                 return {
                     token: token
                 };

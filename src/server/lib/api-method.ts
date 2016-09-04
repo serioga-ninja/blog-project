@@ -1,5 +1,5 @@
 import * as express from "express";
-import {APIError} from "./api-error";
+import {APIError, AuthError} from "./api-error";
 import * as _ from "lodash";
 import Promise = require('bluebird');
 var mongoose = require("mongoose");
@@ -11,6 +11,8 @@ export function APIMethod(fn: Function): Function {
     return (request: express.Request, response: express.Response) => {
         method(request, response).then((res: Object) => {
             response.status(200).json(res);
+        }).catch(AuthError, (err) => {
+            response.status(err.code).json(err.message);
         }).catch(APIError, (err) => {
             response.status(err.code).json(err.message);
         }).catch(mongoose.Error, (err) => {
@@ -34,6 +36,9 @@ export function MiddlewareMethod(fn: Function): Function {
         return method(request, response)
             .then(function () {
                 next();
+            })
+            .catch(function (err) {
+                response.status(400).json(err.message);
             });
     }
 }

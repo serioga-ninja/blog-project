@@ -1,39 +1,41 @@
 import * as jwt from 'jsonwebtoken';
 import bCrypt = require('bcrypt-nodejs');
-var crypto = require('crypto');
 import constants = require('../../config/constants');
+import environments = require('../../config/environment');
 
+interface AuthHelperInterface {
+    generateToken(id:string):void
+    verify(id:string):void
+}
 
-
-export = class AuthHelper {
-
+class AuthHelper implements AuthHelperInterface {
     /**
      * Generate auth token
-     * @param id
-     * @returns {Promise<any>|Promise}
+     * @param {String} id
+     * @returns {Promise<string>}
      */
-    public static generateToken(id: string) {
+    public generateToken(id:string) {
         return new Promise((resolve) => {
             resolve(jwt.sign({id: id}, constants.secret, {algorithm: constants.jwt.algorithm}));
         });
     }
 
-    public static createHash(password): string {
-        return ['sha1', 'salt',
-            crypto.createHash('sha1')
-                .update('salt')
-                .update(password)
-                .digest('hex')
-        ].join('$');
-    }
-
-    /**
-     * Check if not hashed and hashed passwords right
-     * @param {String} hashedPassword
-     * @param {String} password
-     * @returns {boolean}
-     */
-    public static checkPassword(hashedPassword: string, password: string): boolean {
-        return AuthHelper.createHash(password) === hashedPassword;
+    public verify(token:string) {
+        return new Promise((resolve, reject) => {
+            jwt.verify(token, constants.jwt.algorithm, (err, decoded) => {
+                if (err) {
+                    reject(err);
+                }
+                resolve(decoded.id);
+            })
+        })
     }
 }
+
+export = (function () {
+    var authHelpers = {
+        token: AuthHelper
+    };
+
+    return authHelpers[environments.AUTHORIZATION];
+})();
