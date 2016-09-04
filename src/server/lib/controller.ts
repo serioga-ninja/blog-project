@@ -90,7 +90,7 @@ export abstract class ApiController implements controller {
         var methods = this.methods;
 
         _.each(methods, (method: methodObj) => {
-            var routParams: Array<any> = [APIHelper.buildUrl(this.urlPart, method.withId, this.idAttribute)];
+            var routParams: Array<any> = [APIHelper.buildUrl(this.urlPart, method.withId, this.idAttribute, method.uriPart)];
 
             _.each(method.middleware, (middleware: Function) => {
                 routParams.push(MiddlewareMethod(middleware));

@@ -3,11 +3,14 @@
  */
 import mongoose = require('mongoose');
 
-export function buildUrl(uriPart:string, needId:boolean, idAttribute:string):string {
-    if (!needId)
-        return '/api/v1/' + uriPart;
-    else
-        return '/api/v1/' + uriPart + '/:' + idAttribute;
+export function buildUrl(uriPart:string, needId:boolean, idAttribute:string, childService:string = ''):string {
+    var url = ['/api', 'v1', uriPart];
+    if (needId) {
+        url.push(':' + idAttribute);
+    }
+    url.push(childService);
+
+    return url.join('/');
 }
 
 export function toModelView(model:mongoose.Document):Object {

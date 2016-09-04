@@ -3,13 +3,13 @@ import * as express from "express";
 import {APIMethod} from "../../lib/api-method";
 import {UserService} from "../user/service";
 import {UserModel} from "../user/model";
-import {APIError, NotImplemented} from "../../lib/api-error";
+import {APIError, NotImplemented, AuthError} from "../../lib/api-error";
 import {ApiController, controller} from "../../lib/controller";
 import {Model} from "mongoose";
 
 
 export = class AuthController extends ApiController implements controller {
-    urlPart: 'auth';
+    urlPart:string = 'auth';
 
 
     constructor() {
@@ -18,7 +18,7 @@ export = class AuthController extends ApiController implements controller {
         this.methods = [
             {
                 method: this.authenticate,
-                type: 'get',
+                type: 'post',
                 withId: false,
                 uriPart: 'login',
                 middleware: []
@@ -32,7 +32,7 @@ export = class AuthController extends ApiController implements controller {
 
         return UserService.getByUsername(username).then((userData: UserModel._interface) => {
             if (!AuthHelper.checkPassword(userData.password, password)) {
-                throw new APIError('Email or password mismatch');
+                throw new AuthError('Email or password mismatch');
             }
 
             return AuthHelper.generateToken(userData._id).then((token: string) => {
