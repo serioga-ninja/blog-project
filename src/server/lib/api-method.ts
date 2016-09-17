@@ -10,7 +10,7 @@ export function APIMethod(fn: Function): Function {
     var method = Promise.method(fn);
 
     return (request: express.Request, response: express.Response) => {
-        method(request, response).then((res: Object) => {
+        method.call(this, request, response).then((res: Object) => {
             response.status(200).json(res);
         }).catch(AuthError, (err) => {
             response.status(err.code).json(err.message);
@@ -40,7 +40,8 @@ export function MiddlewareMethod(fn: Function): Function {
             .then(function () {
                 next();
             })
-            .catch(function (err) {
+            .catch(function (err:Error) {
+                console.error(err.stack);
                 response.status(400).json(err.message);
             });
     }

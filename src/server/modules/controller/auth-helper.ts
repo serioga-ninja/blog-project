@@ -22,7 +22,7 @@ class TokenAuth implements AuthHelperInterface {
 
     public verify(token:string) {
         return new Promise((resolve, reject) => {
-            jwt.verify(token, constants.secret, constants.jwt.algorithm, (err, decoded) => {
+            jwt.verify(token, constants.secret, {algorithms: [constants.jwt.algorithm]}, (err, decoded) => {
                 if (err) {
                     return reject(err);
                 }

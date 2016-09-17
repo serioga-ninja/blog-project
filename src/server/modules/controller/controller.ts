@@ -22,9 +22,9 @@ export interface methodObj {
 }
 
 function bind(fn:Function, scope:Object) {
-    return function () {
-        fn.apply(scope, arguments);
-    }
+    return APIMethod(function () {
+        return fn.apply(scope, arguments);
+    })
 }
 
 
@@ -34,7 +34,7 @@ export class ApiController implements controller {
     private _methods;
     // id attribute, or how we should looking for the entities
 
-    constructor(private model?: mongoose.Model<any>) {
+    constructor(private model?:mongoose.Model<any>) {
         this._methods = [
             {
                 method: this.single,
@@ -150,17 +150,17 @@ export class ApiController implements controller {
      * Method returns single model
      * @type {Function}
      */
-    public single = APIMethod((req:interfaces.MyRequest) => {
+    public single = (req:interfaces.MyRequest) => {
         var search = {};
         search[this.idAttribute] = req.params[this.idAttribute];
         return Promise.resolve(this.beforeModelSend(req.model))
-    });
+    };
 
     /**
      * Method saves single model
      * @type {Function}
      */
-    public save = APIMethod((req:interfaces.MyRequest) => {
+    public save = (req:interfaces.MyRequest) => {
         var data = this.requestToData(req.body);
         var search = {};
         search[this.idAttribute] = req.params[this.idAttribute];
@@ -178,13 +178,13 @@ export class ApiController implements controller {
                 return req.model.save();
             })
             .then(this.beforeModelSend);
-    });
+    };
 
     /**
      * Method creates single model
      * @type {Function}
      */
-    public create = APIMethod((req:interfaces.MyRequest) => {
+    public create = (req:interfaces.MyRequest) => {
         var data = this.requestToData(req.body);
 
         return Promise
@@ -200,14 +200,14 @@ export class ApiController implements controller {
                 return model.save();
             })
             .then(this.beforeModelSend);
-    });
+    };
 
 
     /**
      * Method delete the model
      * @type {Function}
      */
-    public destroy = APIMethod((req:interfaces.MyRequest) => {
+    public destroy = (req:interfaces.MyRequest) => {
         return Promise.resolve(this.beforeRemove(req.model))
             .then((model:mongoose.Model<any>) => {
                 return new Promise((resolve, reject) => {
@@ -220,14 +220,14 @@ export class ApiController implements controller {
                     });
                 })
             });
-    });
+    };
 
 
     /**
      * Method returns single model for the collection according to the query params
      * @type {Function}
      */
-    public query = APIMethod((req:interfaces.MyRequest) => {
+    public query = (req:interfaces.MyRequest) => {
         var query = req.query,
             pageNumber = parseInt(query.page, 10) || 1,
             limit = parseInt(query.limit, 10) || 10,
@@ -243,5 +243,5 @@ export class ApiController implements controller {
                     err ? reject(err) : resolve(objects);
                 });
         });
-    });
+    };
 }

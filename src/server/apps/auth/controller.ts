@@ -1,12 +1,11 @@
 import AuthHelper = require('../../modules/controller/auth-helper');
-import * as express from "express";
-import {APIMethod} from "../../lib/api-method";
 import {UserService} from "../user/service";
 import {UserModel} from "../user/model";
 import {NotImplemented, AuthError} from "../../lib/api-error";
 import {ApiController, controller} from "../../modules/controller/controller";
 import {checkPassword} from "../../helpers/auth";
-
+import {MyRequest} from "../../interfaces";
+import Promise =require("bluebird");
 
 export = class AuthController extends ApiController implements controller {
     urlPart:string = 'auth';
@@ -25,7 +24,7 @@ export = class AuthController extends ApiController implements controller {
         ];
     }
 
-    public authenticate = APIMethod((req:express.Request) => {
+    public authenticate = (req:MyRequest) => {
         var username:string = req.body.username,
             password:string = req.body.password;
 
@@ -40,25 +39,35 @@ export = class AuthController extends ApiController implements controller {
                 };
             })
         });
-    });
+    };
 
-    public single = APIMethod(() => {
-        throw new NotImplemented();
-    });
+    public single = () => {
+        return Promise.resolve(() => {
+            throw new NotImplemented();
+        });
+    };
 
-    public save = APIMethod(() => {
-        throw new NotImplemented();
-    });
+    public save = () => {
+        return Promise.resolve(() => {
+            throw new NotImplemented();
+        });
+    };
 
-    public create = APIMethod(() => {
-        throw new NotImplemented();
-    });
+    public create = () => {
+        return Promise.resolve(() => {
+            throw new NotImplemented();
+        });
+    };
 
-    public destroy = APIMethod(() => {
-        throw new NotImplemented();
-    });
+    public destroy = () => {
+        return Promise.resolve(() => {
+            throw new NotImplemented();
+        });
+    };
 
-    public query = APIMethod(() => {
-        throw new NotImplemented();
-    });
+    public query = () => {
+        return Promise.resolve(() => {
+            throw new NotImplemented();
+        });
+    };
 }

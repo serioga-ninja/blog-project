@@ -18,7 +18,7 @@
       "commit": "fc341765ebbb04b7109981a25dced01f488f4d94"
     },
     "node/node.d.ts": {
-      "commit": "1ec3d510e0c4d7c50e708ca7cb0765c7e06fa2ed"
+      "commit": "7c9f3114a756f052ca10caba615540d7b5eb19be"
     },
     "method-override/method-override.d.ts": {
       "commit": "fc341765ebbb04b7109981a25dced01f488f4d94"
@@ -52,6 +52,9 @@
     },
     "jsonwebtoken/jsonwebtoken.d.ts": {
       "commit": "1ec3d510e0c4d7c50e708ca7cb0765c7e06fa2ed"
+    },
+    "winston/winston.d.ts": {
+      "commit": "7c9f3114a756f052ca10caba615540d7b5eb19be"
     }
   }
 }
