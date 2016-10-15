@@ -25,8 +25,10 @@ export function APIMethod(fn: Function): Function {
         }).catch(mongoose.Error.ValidationError, (err) => {
             response.status(400).json(err);
         }).catch(jwt.JsonWebTokenError, (err) => {
+            console.error(err.stack);
             response.status(401).json(err);
         }).catch((err) => {
+            console.error(err.stack);
             response.status(500).json(err.stack);
         });
     }

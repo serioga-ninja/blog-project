@@ -7,6 +7,9 @@ import {hasIdAttribute, preload} from "../../middleware/api";
 import Promise = require('bluebird');
 import * as interfaces from "../../interfaces";
 import {AuthMiddleware} from "../../apps/auth/middleware";
+import {Mongoose} from "mongoose";
+import {ERROR_MESSAGES} from "../../helpers/messages";
+import {NotFound} from "../../lib/api-error";
 
 export interface controller {
     urlPart:string;
@@ -28,13 +31,18 @@ function bind(fn:Function, scope:Object) {
 }
 
 
-export class ApiController implements controller {
+export abstract class BaseController {
+
+}
+
+export class ApiController extends BaseController implements controller {
     urlPart:string; // the part of url which /api/v1/:urlPart/bla-bla
     idAttribute:string = '_id';
     private _methods;
     // id attribute, or how we should looking for the entities
 
     constructor(private model?:mongoose.Model<any>) {
+        super();
         this._methods = [
             {
                 method: this.single,
@@ -55,7 +63,7 @@ export class ApiController implements controller {
                 type: 'post',
                 withId: false,
                 uriPart: '',
-                middleware: [AuthMiddleware.isAuthorised]
+                middleware: []
             },
             {
                 method: this.destroy,
@@ -113,20 +121,42 @@ export class ApiController implements controller {
 
     /**
      * Prepare request.body and set it to the model
-     * @param {Object} data
-     * @param {boolean} isNew
+     * @param {express.Request} request
+     * @param {boolean} [isNew=true]
      * @returns {Object}
      */
-    public prepareData(data:Object, isNew:boolean) {
-        return data;
-    }
-
-    public beforeSave() {
-        // TODO
+    public prepareData(request:express.Request, isNew:boolean=false) {
+        return request.body;
     }
 
     public validate(data:Object) {
         return data;
+    }
+
+    public beforeSave(model:mongoose.Model<any>) {
+        return model;
+    }
+
+    public prepareModel(model, data:Object) {
+        return model.set(data);
+    }
+
+    public afterCreate(model) {
+        return model;
+    }
+
+    public preload(id) {
+        var search = {};
+        search[this.idAttribute] = id;
+        return new this.model()
+            .findOne(search)
+            .exec()
+            .then((entity) => {
+                if (!entity) {
+                    throw new NotFound(ERROR_MESSAGES.not_found);
+                }
+                return entity;
+            })
     }
 
     public afterSave() {
@@ -161,21 +191,23 @@ export class ApiController implements controller {
      * @type {Function}
      */
     public save = (req:interfaces.MyRequest) => {
-        var data = this.requestToData(req.body);
-        var search = {};
-        search[this.idAttribute] = req.params[this.idAttribute];
+        var id = req.params[this.idAttribute];
 
         return Promise
             .bind(this)
             .then(() => {
-                return [data, false];
+                return this.prepareData(req, false);
             })
-            .spread(this.prepareData)
             .then(this.validate)
-            .then((data:Object) => {
-                req.model.set(data);
-
-                return req.model.save();
+            .then((data) => {
+                return this.preload(id)
+                    .then((model) => {
+                        return this.prepareModel(model, data);
+                    });
+            })
+            .then(this.beforeSave)
+            .then((model) => {
+                return model.save();
             })
             .then(this.beforeModelSend);
     };
@@ -185,20 +217,20 @@ export class ApiController implements controller {
      * @type {Function}
      */
     public create = (req:interfaces.MyRequest) => {
-        var data = this.requestToData(req.body);
-
         return Promise
             .bind(this)
             .then(() => {
-                return [data, true];
+                return this.prepareData(req, true);
             })
-            .spread(this.prepareData)
             .then(this.validate)
-            .then((data:Object) => {
-                let model = new this.model(data);
-
+            .then((data) => {
+                return this.prepareModel(new this.model(), data);
+            })
+            .then(this.beforeSave)
+            .then((model) => {
                 return model.save();
             })
+            .then(this.afterCreate)
             .then(this.beforeModelSend);
     };
 
