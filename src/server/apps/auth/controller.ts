@@ -6,6 +6,8 @@ import {ApiController, controller} from "../../modules/controller/controller";
 import {checkPassword} from "../../helpers/auth";
 import {MyRequest} from "../../interfaces";
 import Promise =require("bluebird");
+import {Vocabulary} from "../../lib/vocabulary";
+
 
 export = class AuthController extends ApiController implements controller {
     urlPart:string = 'auth';
@@ -43,31 +45,31 @@ export = class AuthController extends ApiController implements controller {
 
     public single = () => {
         return Promise.resolve(() => {
-            throw new NotImplemented();
+            throw new NotImplemented(Vocabulary.getWord('errors.NOT_IMPLEMENTED'));
         });
     };
 
     public save = () => {
         return Promise.resolve(() => {
-            throw new NotImplemented();
+            throw new NotImplemented(Vocabulary.getWord('errors.NOT_IMPLEMENTED'));
         });
     };
 
     public create = () => {
         return Promise.resolve(() => {
-            throw new NotImplemented();
+            throw new NotImplemented(Vocabulary.getWord('errors.NOT_IMPLEMENTED'));
         });
     };
 
     public destroy = () => {
         return Promise.resolve(() => {
-            throw new NotImplemented();
+            throw new NotImplemented(Vocabulary.getWord('errors.NOT_IMPLEMENTED'));
         });
     };
 
     public query = () => {
         return Promise.resolve(() => {
-            throw new NotImplemented();
+            throw new NotImplemented(Vocabulary.getWord('errors.NOT_IMPLEMENTED'));
         });
     };
 }
