@@ -1,10 +1,9 @@
 
-import * as express from "express";
+import express = require("express");
 
 
-var app = express();
+let app = express();
 require("./config/database")();
-require("./config/dump")();
 require("./config/server")(app);
 
 export = app;

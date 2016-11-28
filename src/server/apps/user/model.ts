@@ -1,7 +1,7 @@
 import mongoose = require('mongoose');
 import {createHash} from '../../helpers/auth';
 
-var Schema = mongoose.Schema,
+let Schema = mongoose.Schema,
     validators = require('mongoose-validators');
 
 export module UserModel {
@@ -15,7 +15,7 @@ export module UserModel {
         password: string;
     }
 
-    export var _schema: mongoose.Schema = new Schema({
+    export let _schema: mongoose.Schema = new Schema({
         id: {
             type: String,
             require: true
@@ -46,16 +46,13 @@ export module UserModel {
     }, {
         timestamps: {createdAt: 'created_at'}
     }).pre('save', function (next) {
-        var _this = this.toObject();
-        if (_this.password) {
-            this.password = createHash(_this.password);
+        let self = this.toObject();
+        if (self.password) {
+            this.password = createHash(self.password);
         }
-        next();
-    }).pre('get', function (a, b, next) {
-        delete this.password;
         next();
     });
 
 
-    export var model = mongoose.model<_interface>('User', _schema);
+    export let model = mongoose.model<_interface>('User', _schema);
 }

@@ -2,6 +2,7 @@ import jwt  = require('jsonwebtoken');
 import bCrypt = require('bcrypt-nodejs');
 import constants = require('../../config/constants');
 import environments = require('../../config/environment');
+import Promise = require('bluebird');
 
 interface AuthHelperInterface {
     generateToken(id:string):void

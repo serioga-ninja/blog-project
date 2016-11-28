@@ -9,8 +9,8 @@ export class _Vocabulary {
 
     constructor() {
         this.lang = environment.LANGUAGE;
-        var usVocabulary = fs.readdirSync(path.join(process.cwd(), 'lang', 'US.json'));
-        var currentVocabulary = fs.readdirSync(path.join(process.cwd(), 'lang', this.lang + '.json'));
+        var usVocabulary = fs.readFileSync(path.join(process.cwd(), 'lang', 'US.json'));
+        var currentVocabulary = fs.readFileSync(path.join(process.cwd(), 'lang', this.lang + '.json'));
         _.merge(this.vocabulary, usVocabulary, currentVocabulary);
     }
 

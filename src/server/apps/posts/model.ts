@@ -53,6 +53,6 @@ export module PostModel {
         next();
     });
 
-    export var model = mongoose.model<_interface>('Post', _schema);
+    export let model = mongoose.model<_interface>('Post', _schema);
 
 }

@@ -1,6 +1,6 @@
-import {Request} from "express-serve-static-core";
+import express = require("express");
 
-export interface MyRequest extends Request {
+export interface MyRequest extends express.Request {
     model?: any
 }
 

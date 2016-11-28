@@ -5,12 +5,12 @@ import {NotImplemented, AuthError} from "../../lib/api-error";
 import {ApiController, controller} from "../../modules/controller/controller";
 import {checkPassword} from "../../helpers/auth";
 import {MyRequest} from "../../interfaces";
-import Promise =require("bluebird");
+import Promise = require("bluebird");
 import {Vocabulary} from "../../lib/vocabulary";
 
 
 export = class AuthController extends ApiController implements controller {
-    urlPart:string = 'auth';
+    urlPart: string = 'auth';
 
     constructor() {
         super();
@@ -26,16 +26,16 @@ export = class AuthController extends ApiController implements controller {
         ];
     }
 
-    public authenticate = (req:MyRequest) => {
-        var username:string = req.body.username,
-            password:string = req.body.password;
+    public authenticate = (req: MyRequest) => {
+        var username: string = req.body.username,
+            password: string = req.body.password;
 
-        return UserService.getByUsername(username).then((userData:UserModel._interface) => {
+        return UserService.getByUsername(username).then((userData: UserModel._interface) => {
             if (!checkPassword(userData.password, password)) {
                 throw new AuthError('Email or password mismatch');
             }
 
-            return new AuthHelper().generateToken(userData._id).then((token:string) => {
+            return new AuthHelper().generateToken(userData._id).then((token: string) => {
                 return {
                     token: token
                 };

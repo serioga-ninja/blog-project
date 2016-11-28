@@ -1,5 +1,6 @@
 import {UserModel} from "./model";
 import {APIError} from "../../lib/api-error";
+import Promise = require('bluebird');
 
 export module UserService {
 

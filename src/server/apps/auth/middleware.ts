@@ -1,4 +1,4 @@
-import * as express from "express";
+import express = require("express");
 import AuthHelper = require('../../modules/controller/auth-helper');
 import {AuthError, NotFound} from "../../lib/api-error";
 import logger = require('../../lib/logger');

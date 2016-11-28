@@ -133,7 +133,7 @@ export class ApiController extends BaseController implements controller {
         return data;
     }
 
-    public beforeSave(model:mongoose.Model<any>) {
+    public beforeSave(model:mongoose.Document) {
         return model;
     }
 
@@ -163,7 +163,7 @@ export class ApiController extends BaseController implements controller {
         // TODO
     }
 
-    public beforeRemove(model:mongoose.Model<any>) {
+    public beforeRemove(model:mongoose.Document) {
         return model;
     }
 
@@ -241,7 +241,7 @@ export class ApiController extends BaseController implements controller {
      */
     public destroy = (req:interfaces.MyRequest) => {
         return Promise.resolve(this.beforeRemove(req.model))
-            .then((model:mongoose.Model<any>) => {
+            .then((model:mongoose.Document) => {
                 return new Promise((resolve, reject) => {
                     model.remove((error) => {
                         if (error) {

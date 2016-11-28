@@ -6,13 +6,9 @@ import morgan = require('morgan');
 import express = require('express');
 import fs = require('fs');
 import Promise = require('bluebird');
-var path = require('path');
+import path = require('path');
 
-// Mongo
-import {Express} from "express";
-
-
-export = function (app: Express) {
+export = function (app: express.Express) {
     app.use(bodyParser.urlencoded({extended: true}));
     app.use(bodyParser.json());
     app.use(morgan('combined')); // logging
@@ -25,20 +21,20 @@ export = function (app: Express) {
     app.use('/scripts', express.static(path.join(__dirname, '..', '..', 'dist', 'scripts')));
     app.use('/templates', express.static(path.join(__dirname, '..', '..', 'dist', 'templates')));
 
-    var modules = [
+    let modules = [
         'auth',
         // 'comments',
         // 'posts',
         'user'
     ];
 
-    for (var i = 0; i < modules.length; i++) {
-        // var router = './modules/' + modules[i] + '/router';
-        var controller = '../apps/' + modules[i] + '/controller';
+    for (let i = 0; i < modules.length; i++) {
+        // let router = './modules/' + modules[i] + '/router';
+        let controller = '../apps/' + modules[i] + '/controller';
         // if(fs.existsSync(router)) {
         //     require(router).index(app);
         // }
-        var Controller = require(controller);
+        let Controller = require(controller);
         (new Controller()).register(app);
     }
 
