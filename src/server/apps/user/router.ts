@@ -1,11 +1,6 @@
-// import UserController  = require("./controller");
-// import {AuthMiddleware} from "../auth/middleware";
+import  {UserController} from "./controller";
 
-export function index(app) {
-    // app.get('/:username', UserController.findByUsername);
-    // app.post('/new', UserController.findOrCreate);
-    // app.put('/:username', AuthMiddleware.isAuthorised, UserController.update);
-    // app.delete('/:username', AuthMiddleware.isAuthorised, UserController.destroy);
-
-    return app;
+export = function index(app) {
+  new UserController().register(app);
+  return app;
 }

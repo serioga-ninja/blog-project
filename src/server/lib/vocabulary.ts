@@ -1,7 +1,7 @@
-import fs = require('fs');
-import environment = require('../config/environment');
-import path = require('path');
-import _ = require('lodash');
+import * as fs from 'fs';
+import {environment} from '../config/environment';
+import * as path from 'path';
+import * as _ from 'lodash';
 
 export class _Vocabulary {
     vocabulary: Object = {};

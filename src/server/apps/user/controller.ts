@@ -1,12 +1,10 @@
 import {UserModel} from "./model";
-import Promise = require('bluebird');
-import {ApiController} from "../../modules/controller/controller";
-import mongoose = require('mongoose');
+import {ApiController} from "../../lib/controller/controller";
 
-export = class UserController extends ApiController {
+export class UserController extends ApiController<any> {
     urlPart:string = 'users';
 
     constructor() {
-        super(UserModel.model);
+        super(UserModel);
     }
 }

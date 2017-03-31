@@ -1,15 +1,16 @@
-import AuthHelper = require('../../modules/controller/auth-helper');
+import {AuthHelperController} from  '../../lib/controller/auth-helper';
 import {UserService} from "../user/service";
-import {UserModel} from "../user/model";
-import {NotImplemented, AuthError} from "../../lib/api-error";
-import {ApiController, controller} from "../../modules/controller/controller";
+import {AuthError} from "../../lib/api-error";
 import {checkPassword} from "../../helpers/auth";
 import {MyRequest} from "../../interfaces";
-import Promise = require("bluebird");
-import {Vocabulary} from "../../lib/vocabulary";
+import {IUserDocument} from "../user/model";
+import controller = BlogProject.Controller.controller;
+import {ApiController} from "../../lib/controller/controller";
+
+let AuthHelper = AuthHelperController.getAuthHelper();
 
 
-export = class AuthController extends ApiController implements controller {
+export class AuthController extends ApiController<any> implements controller {
     urlPart: string = 'auth';
 
     constructor() {
@@ -27,10 +28,10 @@ export = class AuthController extends ApiController implements controller {
     }
 
     public authenticate = (req: MyRequest) => {
-        var username: string = req.body.username,
+        let username: string = req.body.username,
             password: string = req.body.password;
 
-        return UserService.getByUsername(username).then((userData: UserModel._interface) => {
+        return UserService.getByUsername(username).then((userData: IUserDocument) => {
             if (!checkPassword(userData.password, password)) {
                 throw new AuthError('Email or password mismatch');
             }
@@ -40,36 +41,6 @@ export = class AuthController extends ApiController implements controller {
                     token: token
                 };
             })
-        });
-    };
-
-    public single = () => {
-        return Promise.resolve(() => {
-            throw new NotImplemented(Vocabulary.getWord('errors.NOT_IMPLEMENTED'));
-        });
-    };
-
-    public save = () => {
-        return Promise.resolve(() => {
-            throw new NotImplemented(Vocabulary.getWord('errors.NOT_IMPLEMENTED'));
-        });
-    };
-
-    public create = () => {
-        return Promise.resolve(() => {
-            throw new NotImplemented(Vocabulary.getWord('errors.NOT_IMPLEMENTED'));
-        });
-    };
-
-    public destroy = () => {
-        return Promise.resolve(() => {
-            throw new NotImplemented(Vocabulary.getWord('errors.NOT_IMPLEMENTED'));
-        });
-    };
-
-    public query = () => {
-        return Promise.resolve(() => {
-            throw new NotImplemented(Vocabulary.getWord('errors.NOT_IMPLEMENTED'));
         });
     };
 }

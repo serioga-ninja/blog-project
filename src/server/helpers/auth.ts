@@ -1,10 +1,5 @@
-/**
- * Created by serioga on 04.09.16.
- */
-
-
-var crypto = require('crypto');
-import constants = require('../config/constants');
+import {constants} from '../config/constants';
+let crypto = require('crypto');
 
 export function createHash(password):string {
     return ['sha1', 'salt',

@@ -4,7 +4,8 @@
   "description": "my blog project",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:db": "mongod --dbpath ./data/db/"
   },
   "repository": {
     "type": "git",
@@ -78,6 +79,6 @@
     "gulp-uglify": "1.5.3",
     "gulp-util": "3.0.7",
     "gulp-zip": "3.2.0",
-    "typescript": "^2.0.10"
+    "typescript": "^2.2.1"
   }
 }
