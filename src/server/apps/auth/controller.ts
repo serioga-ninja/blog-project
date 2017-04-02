@@ -10,7 +10,6 @@ import {APIHelper} from "../../helpers/api";
 
 let AuthHelper = AuthHelperController.getAuthHelper();
 
-
 export class AuthController extends ApiController<any> implements controller {
     urlPart: string = 'auth';
 
@@ -20,7 +19,7 @@ export class AuthController extends ApiController<any> implements controller {
         [ApiController.bind(this.authenticate, this)]);
     }
 
-    public authenticate = (req: MyRequest) => {
+    public authenticate(req: MyRequest) {
         let username: string = req.body.username,
             password: string = req.body.password;
 

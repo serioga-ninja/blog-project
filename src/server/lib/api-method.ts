@@ -33,13 +33,10 @@ export function APIMethod(fn: Function): Function {
 }
 
 export function MiddlewareMethod(fn: Function): Function {
-    var method = Promise.method(fn);
+    let method = Promise.method(fn);
 
     return function (request, response, next) {
         return method(request, response)
-            .then(function () {
-                next();
-            })
             .catch(function (err:Error) {
                 console.error(err.stack);
                 response.status(400).json(err.message);

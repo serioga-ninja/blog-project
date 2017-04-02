@@ -112,7 +112,7 @@ export class ApiController<T extends mongoose.Model<any>> extends BaseController
    * Method returns single model
    * @type {Function}
    */
-  public single = (req: interfaces.MyRequest) => {
+  public single(req: interfaces.MyRequest) {
     let search = {};
     search[this.idAttribute] = req.params[this.idAttribute];
     return Promise.resolve(this.beforeModelSend(req.model))
@@ -122,7 +122,7 @@ export class ApiController<T extends mongoose.Model<any>> extends BaseController
    * Method saves single model
    * @type {Function}
    */
-  public save = (req: interfaces.MyRequest) => {
+  public save(req: interfaces.MyRequest) {
     let id = req.params[this.idAttribute];
 
     return Promise
@@ -148,7 +148,7 @@ export class ApiController<T extends mongoose.Model<any>> extends BaseController
    * Method creates single model
    * @type {Function}
    */
-  public create = (req: interfaces.MyRequest) => {
+  public create(req: interfaces.MyRequest) {
     return Promise.resolve(this.prepareData(req, true))
       .then((body) => {
         return this.validate(body);
@@ -175,7 +175,7 @@ export class ApiController<T extends mongoose.Model<any>> extends BaseController
    * Method delete the model
    * @type {Function}
    */
-  public destroy = (req: interfaces.MyRequest) => {
+  public destroy(req: interfaces.MyRequest) {
     return Promise.resolve(this.beforeRemove(req.model))
       .then((model: mongoose.Document) => {
         return model.remove();
@@ -187,7 +187,7 @@ export class ApiController<T extends mongoose.Model<any>> extends BaseController
    * Method returns single model for the collection according to the query params
    * @type {Function}
    */
-  public query = (req: interfaces.MyRequest) => {
+  public query(req: interfaces.MyRequest) {
     let query = req.query,
       pageNumber = parseInt(query.page, 10) || 1,
       limit = parseInt(query.limit, 10) || 10,

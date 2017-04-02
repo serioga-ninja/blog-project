@@ -3,7 +3,7 @@
  */
 
 
-export var ERROR_MESSAGES = {
+export const ERROR_MESSAGES = {
     not_found: 'Content not found',
     model_not_saved: 'Model have not been saved!'
 };
