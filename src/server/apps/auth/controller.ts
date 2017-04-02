@@ -6,6 +6,7 @@ import {MyRequest} from "../../interfaces";
 import {IUserDocument} from "../user/model";
 import controller = BlogProject.Controller.controller;
 import {ApiController} from "../../lib/controller/controller";
+import {APIHelper} from "../../helpers/api";
 
 let AuthHelper = AuthHelperController.getAuthHelper();
 
@@ -13,18 +14,10 @@ let AuthHelper = AuthHelperController.getAuthHelper();
 export class AuthController extends ApiController<any> implements controller {
     urlPart: string = 'auth';
 
-    constructor() {
-        super();
-
-        this.methods = [
-            {
-                method: this.authenticate,
-                type: 'post',
-                withId: false,
-                uriPart: 'login',
-                middleware: []
-            }
-        ];
+    public register(app) {
+      super.register(app);
+      app.post(APIHelper.buildUrl(this.urlPart, false, this.idAttribute, 'login'),
+        [ApiController.bind(this.authenticate, this)]);
     }
 
     public authenticate = (req: MyRequest) => {

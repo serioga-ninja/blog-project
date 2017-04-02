@@ -1,22 +1,13 @@
 import * as mongoose from 'mongoose';
 import * as express from 'express';
-import {APIMethod, MiddlewareMethod} from "../api-method";
+import {APIMethod} from "../api-method";
 import {APIHelper} from "../../helpers/api";
-import * as _ from "lodash";
-import {hasIdAttribute, preload} from "../../middleware/api";
 import * as Promise from "bluebird";
 import * as interfaces from "../../interfaces";
-import {AuthMiddleware} from "../../apps/auth/middleware";
 import {Mongoose} from "mongoose";
 import {ERROR_MESSAGES} from "../../helpers/messages";
 import {NotFound} from "../api-error";
 import methodObj = BlogProject.Controller.methodObj;
-
-function bind(fn: Function, scope: Object) {
-  return APIMethod(function () {
-    return fn.apply(scope, arguments);
-  })
-}
 
 
 export abstract class BaseController {
@@ -26,76 +17,29 @@ export abstract class BaseController {
 export class ApiController<T extends mongoose.Model<any>> extends BaseController implements BlogProject.Controller.controller {
   urlPart: string; // the part of url which /api/v1/:urlPart/bla-bla
   idAttribute: string = '_id';
-  private _methods;
   // id attribute, or how we should looking for the entities
+
+  public static bind(fn: Function, scope: Object) {
+    return APIMethod(function (...args) {
+      return fn.apply(scope, args);
+    })
+  }
 
   constructor(private model?: mongoose.Model<any>) {
     super();
-    this._methods = [
-      {
-        method: this.single,
-        type: 'get',
-        withId: true,
-        uriPart: '',
-        middleware: [AuthMiddleware.isAuthorised, hasIdAttribute(this.idAttribute), preload(this.idAttribute, this.model)]
-      },
-      {
-        method: this.save,
-        type: 'put',
-        withId: true,
-        uriPart: '',
-        middleware: [AuthMiddleware.isAuthorised, hasIdAttribute(this.idAttribute), preload(this.idAttribute, this.model)]
-      },
-      {
-        method: this.create,
-        type: 'post',
-        withId: false,
-        uriPart: '',
-        middleware: []
-      },
-      {
-        method: this.destroy,
-        type: 'delete',
-        withId: true,
-        uriPart: '',
-        middleware: [AuthMiddleware.isAuthorised, hasIdAttribute(this.idAttribute), preload(this.idAttribute, this.model)]
-      },
-      {
-        method: this.query,
-        type: 'get',
-        withId: false,
-        uriPart: '',
-        middleware: [AuthMiddleware.isAuthorised]
-      }
-    ];
-  }
-
-  get methods() {
-    return this._methods;
-  }
-
-  set methods(methods: Array<methodObj>) {
-    this._methods = this._methods.concat(methods);
+    // TODO: move middleware to decorators
   }
 
   /**
    * Method registers all api methods for the current router
    * @param app
    */
-  register(app: express.Router) {
-    let self = this;
-    let methods = this.methods;
-
-    _.each(methods, (method: methodObj) => {
-      let routParams: Array<any> = [APIHelper.buildUrl(this.urlPart, method.withId, this.idAttribute, method.uriPart)];
-      console.log(method.type, routParams[0]);
-      _.each(method.middleware, (middleware: Function) => {
-        routParams.push(MiddlewareMethod(middleware));
-      });
-
-      routParams.push(bind(method.method, self));
-      app[method.type].apply(app, routParams);
-    })
+  public register(app) {
+    app.get(APIHelper.buildUrl(this.urlPart, true, this.idAttribute, ''), [ApiController.bind(this.single, this)]);
+    app.get(APIHelper.buildUrl(this.urlPart, false, this.idAttribute, ''), [ApiController.bind(this.query, this)]);
+    app.post(APIHelper.buildUrl(this.urlPart, false, this.idAttribute, ''), [ApiController.bind(this.create, this)]);
+    app.put(APIHelper.buildUrl(this.urlPart, true, this.idAttribute, ''), [ApiController.bind(this.save, this)]);
+    app.delete(APIHelper.buildUrl(this.urlPart, true, this.idAttribute, ''), [ApiController.bind(this.destroy, this)]);
   }
 
   /**
