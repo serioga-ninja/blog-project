@@ -1,7 +1,11 @@
-import * as mongoose from "mongoose";
-import {environment} from './environment';
+import * as mongoose from 'mongoose';
+import variables from './variables';
 
-mongoose.connect('mongodb://' + [environment.DB_HOST, environment.DB_NAME].join('/'));
+(<any>mongoose).Promise = global.Promise;
+mongoose.connect(`mongodb://${variables.database.user}:${variables.database.password}@${variables.database.host}/${variables.database.name}`, {
+  useMongoClient: true,
+  /* other options */
+});
 
 let db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));

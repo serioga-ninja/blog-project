@@ -1,12 +1,12 @@
 import * as mongoose from 'mongoose';
-import {createHash} from '../../helpers/auth';
+import {createHash} from '../helpers/auth';
 
 let Schema = mongoose.Schema,
   validators = require('mongoose-validators');
 
-export interface IUserDocument extends mongoose.Document {
+export interface IUserModel {
+  id?: string;
   provider: string;
-  id: string;
   username: string;
   firstName: string;
   lastName: string;
@@ -14,7 +14,10 @@ export interface IUserDocument extends mongoose.Document {
   password: string;
 }
 
-export let UserSchema: mongoose.Schema = new Schema({
+export interface IUserDocument extends IUserModel, mongoose.Document {
+}
+
+export let UserModelSchema: mongoose.Schema = new Schema({
   id: {
     type: String,
     require: true
@@ -52,4 +55,4 @@ export let UserSchema: mongoose.Schema = new Schema({
   next();
 });
 
-export let UserModel = mongoose.model<IUserDocument>('User', UserSchema);
+export let UserModel = mongoose.model<IUserDocument>('User', UserModelSchema);

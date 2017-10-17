@@ -1,8 +1,8 @@
 import * as Promise from 'bluebird';
-import {MiddlewareError, NotFound}  from "../lib/api-error";
-import mongoose = require('mongoose');
-import {ERROR_MESSAGES} from "../helpers/messages";
-import * as interfaces from "../interfaces";
+import {MiddlewareError, NotFound} from '../lib/api-error';
+import * as mongoose from 'mongoose';
+import {ERROR_MESSAGES} from '../helpers/messages';
+import * as interfaces from '../interfaces';
 
 export class ApiMiddleware {
   public static hasIdAttribute(idAttribute: string) {
@@ -19,7 +19,7 @@ export class ApiMiddleware {
     };
   }
 
-  public static  preload(idAttribute: string, model: mongoose.Model<any>) {
+  public static preload(idAttribute: string, model: mongoose.Model<any>) {
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
       let fn: Function = descriptor.value;
       descriptor.value = Promise.method((...args) => {

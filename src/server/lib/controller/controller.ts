@@ -4,17 +4,15 @@ import {APIMethod} from "../api-method";
 import {APIHelper} from "../../helpers/api";
 import * as Promise from "bluebird";
 import * as interfaces from "../../interfaces";
-import {Mongoose} from "mongoose";
 import {ERROR_MESSAGES} from "../../helpers/messages";
 import {NotFound} from "../api-error";
-import methodObj = BlogProject.Controller.methodObj;
 
 
 export abstract class BaseController {
 
 }
 
-export class ApiController<T extends mongoose.Model<any>> extends BaseController implements BlogProject.Controller.controller {
+export class ApiController<T extends mongoose.Model<any>> extends BaseController  {
   urlPart: string; // the part of url which /api/v1/:urlPart/bla-bla
   idAttribute: string = '_id';
   // id attribute, or how we should looking for the entities
