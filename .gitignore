@@ -38,3 +38,4 @@ node_modules
 typings
 build
 .vscode
+.env

@@ -3,9 +3,8 @@ import * as mongoose from 'mongoose';
 let Schema = mongoose.Schema,
   ObjectId = Schema.Types.ObjectId;
 
-
-export interface IPostModelDocument extends mongoose.Document {
-  id: string;
+export interface IPostModel {
+  id?: string;
   title: string;
   content: string;
   authorId: string;
@@ -13,6 +12,10 @@ export interface IPostModelDocument extends mongoose.Document {
   postedAt: Date;
   archived: boolean;
   archivedAt: Date;
+}
+
+
+export interface IPostModelDocument extends IPostModel, mongoose.Document {
 }
 
 export let PostModelSchema: mongoose.Schema = new mongoose.Schema({
@@ -34,7 +37,7 @@ export let PostModelSchema: mongoose.Schema = new mongoose.Schema({
   },
   posted: {
     type: Boolean,
-    default: true
+    default: false
   },
   postedAt: {
     type: Date

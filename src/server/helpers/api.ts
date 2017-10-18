@@ -1,4 +1,5 @@
 import * as mongoose from 'mongoose';
+import {IErrorResponse} from '../interfaces/i-error-response';
 
 interface ICollectionView {
   objects: mongoose.Document[];
@@ -12,6 +13,11 @@ interface ICollectionView {
 }
 
 export class APIHelper {
+
+  public static errorResponseBody(status: number, message: string, body: any): IErrorResponse {
+    return {status, message, body};
+  }
+
   public static buildUrl(uriPart: string, needId: boolean, idAttribute: string, childService: string = ''): string {
     let url = ['/api', 'v1', uriPart];
     if (needId) {

@@ -7,7 +7,7 @@ export class UserService {
     return new Promise<IUserDocument>((resolve, reject) => {
       UserModel.findOne(query).exec((err, user) => {
         if (!user) {
-          reject(new APIError('User not found!', 404));
+          reject(new APIError('User not found!'));
         }
         err ? reject(err) : resolve(user);
       });

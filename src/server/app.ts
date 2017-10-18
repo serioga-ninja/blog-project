@@ -4,6 +4,8 @@ import * as path from 'path';
 import * as express from 'express';
 
 import userController from './apps/UserController';
+import postController from './apps/PostController';
+import authController from './apps/AuthController';
 
 class Server {
   public express: express.Application;
@@ -41,7 +43,9 @@ class Server {
   }
 
   public routes() {
-    this.express.use('/api/v1/users', userController)
+    this.express.use('/api/v1/auth', authController);
+    this.express.use('/api/v1/users', userController);
+    this.express.use('/api/v1/posts', postController);
   }
 }
 
