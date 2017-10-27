@@ -39,3 +39,6 @@ typings
 build
 .vscode
 .env
+/src/client-apps/react-app/node_modules/
+/src/client-apps/react-app/yarn-error.log
+/src/client-apps/react-app/public/

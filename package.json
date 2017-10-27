@@ -40,6 +40,7 @@
     "mongoose-unique-validator": "^1.0.2",
     "mongoose-validators": "^0.1.0",
     "morgan": "^1.7.0",
+    "react-redux": "^5.0.6",
     "serve-static": "^1.10.2",
     "typescript-require": "^0.2.9-1",
     "vinyl-buffer": "1.0.0",
@@ -58,6 +59,8 @@
     "@types/morgan": "^1.7.32",
     "@types/node": "^8.0.41",
     "@types/winston": "0.0.32",
+    "babel-eslint": "^8.0.1",
+    "eslint-plugin-react": "^7.4.0",
     "jshint": "2.9.2",
     "ts-node": "^3.3.0",
     "typescript": "^2.5.3"
