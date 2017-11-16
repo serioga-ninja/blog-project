@@ -1,0 +1,18 @@
+<h1>New post</h1>
+
+<form #postFormDir="ngForm" (ngSubmit)="createPost()" [formGroup]="postForm">
+
+  <input matInput
+         placeholder="Name"
+         formControlName="title"
+         required
+         autocomplete="off"
+         name="name">
+
+  <textarea name="text" id="" cols="30" rows="10" formControlName="content"></textarea>
+  <button mat-raised-button
+          type="submit"
+          color="primary">
+    Save
+  </button>
+</form>

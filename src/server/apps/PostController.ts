@@ -1,6 +1,7 @@
 import {CrudController} from '../classes/crud-controller';
 import * as mongoose from 'mongoose';
-import {IPostModel, IPostModelDocument, PostModel} from '../models/post.model';
+import {IPostModelDocument, PostModel} from '../models/post.model';
+import {IPostModel} from '../interfaces/i-post-model';
 
 class PostController extends CrudController<IPostModel> {
   urlPart: string = 'posts';

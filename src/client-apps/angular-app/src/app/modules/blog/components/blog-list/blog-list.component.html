@@ -1,0 +1,25 @@
+<h2>Employee List</h2>
+
+<div *ngFor="let post of posts$ | async" class="employee-list">
+  <h2 class="employee-list__name">{{post.title}}</h2>
+  <p>{{post.content}}</p>
+  <div>
+    <a mat-raised-button
+       [routerLink]="['/posts/', post._id]"
+       color="primary">Edit</a>
+
+    <button mat-raised-button
+            color="warn">
+      Delete
+    </button>
+  </div>
+</div>
+
+<br>
+<div>
+  <a mat-raised-button
+     [routerLink]="['/posts/new']"
+     color="primary">
+    Create new Post
+  </a>
+</div>

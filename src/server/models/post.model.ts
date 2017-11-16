@@ -1,18 +1,8 @@
 import * as mongoose from 'mongoose';
+import {IPostModel} from '../interfaces/i-post-model';
 
 let Schema = mongoose.Schema,
   ObjectId = Schema.Types.ObjectId;
-
-export interface IPostModel {
-  id?: string;
-  title: string;
-  content: string;
-  authorId: string;
-  posted: boolean;
-  postedAt: Date;
-  archived: boolean;
-  archivedAt: Date;
-}
 
 
 export interface IPostModelDocument extends IPostModel, mongoose.Document {
