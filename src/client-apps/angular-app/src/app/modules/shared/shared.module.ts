@@ -3,6 +3,7 @@ import {CommonModule} from '@angular/common';
 import {HttpClientModule} from '@angular/common/http';
 import {FormsModule} from '@angular/forms';
 import {AppMaterialModule} from './material/app.material.module';
+import {MatGridListModule} from '@angular/material/grid-list';
 
 
 @NgModule({
@@ -12,7 +13,8 @@ import {AppMaterialModule} from './material/app.material.module';
   exports: [
     CommonModule,
     FormsModule,
-    AppMaterialModule
+    AppMaterialModule,
+    MatGridListModule
   ]
 })
 export class SharedModule {

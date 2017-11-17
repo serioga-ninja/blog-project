@@ -1,6 +1,6 @@
 import {TestBed, inject} from '@angular/core/testing';
 
-import {BlogApiService} from './blog-api.service';
+import {BlogApiService} from './posts-api.service';
 
 describe('BlogApiService', () => {
   beforeEach(() => {

@@ -1,6 +1,6 @@
 <h2>Employee List</h2>
 
-<div *ngFor="let post of posts$ | async" class="employee-list">
+<div *ngFor="let post of (postsObject$ | async).posts" class="employee-list">
   <h2 class="employee-list__name">{{post.title}}</h2>
   <p>{{post.content}}</p>
   <div>

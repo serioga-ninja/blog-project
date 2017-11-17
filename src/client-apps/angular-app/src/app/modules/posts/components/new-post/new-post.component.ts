@@ -1,7 +1,12 @@
 import {Component, OnInit} from '@angular/core';
-import {BlogApiService} from '../../services/blog-api.service';
+import {BlogApiService} from '../../services/posts-api.service';
 import {FormControl, FormGroup} from '@angular/forms';
 import {Router} from '@angular/router';
+import {Store} from '@ngrx/store';
+import {IPostsModuleReducer} from '../../../../interfaces/i-posts-module-reducer';
+import {Observable} from 'rxjs/Observable';
+import {IPostReducerState} from '../../../../store/posts/posts.reducer';
+import {createPost} from '../../../../store/posts/posts.actions';
 
 @Component({
   selector: 'app-new-post',
@@ -12,8 +17,7 @@ export class NewPostComponent implements OnInit {
 
   public postForm: FormGroup;
 
-  constructor(private blogApiService: BlogApiService,
-              private router: Router) {
+  constructor(private store: Store<IPostsModuleReducer>) {
 
     this.postForm = new FormGroup({
       title: new FormControl(''),
@@ -26,9 +30,8 @@ export class NewPostComponent implements OnInit {
   }
 
   createPost() {
-    return this.blogApiService
-      .createNewPost(this.postForm.getRawValue())
-      .then(() => this.router.navigate(['posts']))
+    return this.store
+      .dispatch(createPost(this.postForm.getRawValue()));
   }
 
 }

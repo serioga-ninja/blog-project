@@ -1,18 +1,9 @@
 import * as mongoose from 'mongoose';
 import {createHash} from '../helpers/auth';
+import {IUserModel} from '../interfaces/i-user-model';
 
 let Schema = mongoose.Schema,
   validators = require('mongoose-validators');
-
-export interface IUserModel {
-  id?: string;
-  provider: string;
-  username: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-}
 
 export interface IUserDocument extends IUserModel, mongoose.Document {
 }

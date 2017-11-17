@@ -6,11 +6,13 @@ const routes: Routes = [
   {
     path: '',
     component: HomePageComponent,
-    pathMatch: 'full'
-  },
-  {
-    path: 'posts',
-    loadChildren: './modules/blog/blog.module#BlogModule'
+    pathMatch: 'full',
+    children: [
+      {
+        path: 'posts',
+        loadChildren: './modules/posts/posts.module#BlogModule'
+      }
+    ]
   }
 ];
 
